@@ -18,7 +18,6 @@ const createPortUsage = (knex, usage, port_id) => {
 };
 
 const createShip = (knex, ship, port_id) => {
-  console.log('create ship func port_id', port_id)
 
   return knex('ships').insert({
     ship_name: ship.ship_name,
