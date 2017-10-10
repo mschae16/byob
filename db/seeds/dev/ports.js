@@ -2,6 +2,7 @@ const ports = require('../../../ports.json');
 const ships = require('../../../ships.json');
 
 const createPortUsage = (knex, usage, port_id) => {
+  console.log('create port func port_id', port_id)
   return knex('port_usage').insert({
     cargo_vessels: usage.cargo_vessels,
     fishing_vessels: usage.fishing_vessels,
@@ -17,6 +18,8 @@ const createPortUsage = (knex, usage, port_id) => {
 };
 
 const createShip = (knex, ship, port_id) => {
+  console.log('create ship func port_id', port_id)
+
   return knex('ships').insert({
     ship_name: ship.ship_name,
     ship_country: ship.ship_country,
@@ -43,7 +46,7 @@ const createPort = (knex, port) => {
     ports.forEach( port => {
       
       portUsagePromises.push(
-        createPortUsage(knex, port.port_usage, portObject[0].port_id)
+        createPortUsage(knex, port.port_usage, portObject[0].id)
       );
     });
 
@@ -52,7 +55,7 @@ const createPort = (knex, port) => {
 
     filteredShips.forEach( ship => {
       shipPromises.push(
-        createShip(knex, ship, portObject[0].port_id)
+        createShip(knex, ship, portObject[0].id)
       )
     });
 
