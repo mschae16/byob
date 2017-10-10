@@ -28,7 +28,7 @@ exports.up = (knex, Promise) => {
         table.string('ship_name')
         table.string('ship_country')
         table.string('ship_type')
-        table.integer('ship_length')
+        table.string('ship_length')
         table.string('ship_imo')
         table.string('ship_status')
         table.string('ship_mmsi_callsign')
