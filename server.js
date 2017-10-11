@@ -152,3 +152,25 @@ app.post('/api/v1/ships', (request, response) => {
       response.status(500).json({ error });
     });
 });
+
+app.delete('/api/v1/ports/:id', (request, response) => {
+  const { id } = request.params;
+
+  database('ports').where({ id }).del()
+    .then( deleted => !deleted ?
+      response.status(404).json({ error: 'A port matching the id submitted could not be found' })
+      :
+      response.sendStatus(204) )
+    .catch( error => response.status(500).json({ error }) );
+});
+
+app.delete('/api/v1/ships/:id', (request, response) => {
+  const { id } = request.params;
+
+  database('ships').where({ id }).del()
+    .then( deleted => !deleted ?
+      response.status(404).json({ error: 'A ship matching the id submitted could not be found' })
+      :
+      response.sendStatus(204) )
+    .catch( error => response.status(500).json({ error }) );
+});
