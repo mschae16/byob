@@ -145,7 +145,7 @@ app.post('/api/v1/ports', (request, response) => {
       authority_military_vessels: authority_military,
       sailing_vessels,
       aid_to_nav_vessels: aids_to_nav,
-      port_id: port[0].id
+      port_id: port[0].id 
       }, '*')
       .then( result => {
         response.status(201).json(Object.assign({}, port[0], { port_usage: result[0] }))
@@ -182,7 +182,7 @@ app.post('/api/v1/ships', (request, response) => {
 app.delete('/api/v1/ports/:id', (request, response) => {
   const { id } = request.params;
 
-  database('port_usage').where({ id }).del()
+  database('port_usage').where({ port_id: id }).del()
     .then( deleted => !deleted ?
       response.status(404).json({ error: 'A port matching the id submitted could not be found' })
       :
