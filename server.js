@@ -51,25 +51,37 @@ app.get('/api/v1/ships', (request, response) => {
 
 app.get('/api/v1/ports/:id', (request, response) => {
   const { id } = request.params
+
   database('ports').where({ id }).select()
     .then( port => {
-      let portUsage = database('port_usage').where({ id }).select()
-      const result = Object.assign({}, port[0], { port_usage: portUsage[0] })
-      return result
+      if (!port.length) {
+        response.status(404).json({ error: 'There is no port with this id' })
+      }
+
+      const portPromise = [];
+  
+      portPromise.push(
+        database('port_usage').where({ port_id: id }).select()
+          .then( usage => Object.assign({}, port[0], { port_usage: usage[0] }))
+      )
+        return Promise.all(portPromise)
     })
-    .then( result => response.status(200).json(result) )
-    .catch( error => response.status(500).json({ error }))
+    .then( port => response.status(200).json(port))
+    .catch( error => response.status(500).json({ error }));
 });
 
 app.get('/api/v1/ships/:id', (request, response) => {
   const { id } = request.params
+
   database('ships').where({ id }).select()
-    .then( ship => response.status(200).json(ship))
+    .then( ship => !ship.length ? response.status(404).json({ error: 'There is no ship with this id' }):
+    response.status(200).json(ship))
     .catch( error => response.status(500).json({ error }))
 });
 
 app.post('/api/v1/ports', (request, response) => {
   const portObject = request.body;
+
   for (let requiredParameter of [
     'port_name',
     'port_locode',
@@ -83,7 +95,25 @@ app.post('/api/v1/ports', (request, response) => {
           .status(422)
           .send({ error: `Expected format: { port_name: <String>, port_locode: <String>, port_max_vessel_size: <String>, port_total_ships: <String>, port_country: <String>, port_usage: <Object> }. You're missing a ${requiredParameter} property.` });
       }
+    };
+
+  for (let requiredParameter of [
+    'cargo_vessels',
+    'fishing_vessels',
+    'various',
+    'tankers',
+    'tug_offshore_supply',
+    'passenger_vessels',
+    'authority_military',
+    'sailing_vessels',
+    'aids_to_nav'
+  ]) {
+    if (!portObject.port_usage[requiredParameter]) {
+      return response
+        .status(422)
+        .send({ error: `Expected format: port_usage: { cargo_vessles: <String>, fishing_vessles: <String>, various: <String>, tankers: <String>, tug_offshore_supply: <String>, passenger_vessels: <String>, authority_military: <String>, sailing_vessels: <String>, aids_to_nav: <String> }. You're missing a ${requiredParameter} property.` });
     }
+  };
 
   database('ports').insert({
     port_name: portObject.port_name,
@@ -91,8 +121,8 @@ app.post('/api/v1/ports', (request, response) => {
     port_max_vessel_size: portObject.port_max_vessel_size,
     port_total_ships: portObject.port_total_ships,
     port_country: portObject.port_country,
-  }, 'id')
-    .then( portId => {
+  }, '*')
+    .then( port => {
       const {
         cargo_vessels,
         fishing_vessels,
@@ -104,25 +134,25 @@ app.post('/api/v1/ports', (request, response) => {
         sailing_vessels,
         aids_to_nav
       } = portObject.port_usage;
+
       database('port_usage').insert({
-        cargo_vessels,
-        fishing_vessels,
-        various_vessels: various,
-        tanker_vessels: tankers,
-        tug_offshore_supply_vessels: tug_offshore_supply,
-        passenger_vessels,
-        authority_military_vessels: authority_military,
-        sailing_vessels,
-        aid_to_nav_vessels: aids_to_nav,
-        port_id: portId
+      cargo_vessels,
+      fishing_vessels,
+      various_vessels: various,
+      tanker_vessels: tankers,
+      tug_offshore_supply_vessels: tug_offshore_supply,
+      passenger_vessels,
+      authority_military_vessels: authority_military,
+      sailing_vessels,
+      aid_to_nav_vessels: aids_to_nav,
+      port_id: port[0].id
+      }, '*')
+      .then( result => {
+        response.status(201).json(Object.assign({}, port[0], { port_usage: result[0] }))
       })
+      .catch( error => response.status(500).json({ error }));
     })
-    .then( () => {
-      response.status(201).json({ message: 'New port created.'})
-    })
-    .catch( error => {
-      response.status(500).json({ error });
-    });
+    .catch( error => response.status(500).json({ error }));
 });
 
 app.post('/api/v1/ships', (request, response) => {
@@ -145,23 +175,24 @@ app.post('/api/v1/ships', (request, response) => {
     }
 
   database('ships').insert(shipObject, '*')
-    .then( ship => {
-      response.status(201).json(ship)
-    })
-    .catch( error => {
-      response.status(500).json({ error });
-    });
+    .then( ship => response.status(201).json(ship))
+    .catch( error => response.status(500).json({ error }));
 });
 
 app.delete('/api/v1/ports/:id', (request, response) => {
   const { id } = request.params;
 
-  database('ports').where({ id }).del()
+  database('port_usage').where({ id }).del()
     .then( deleted => !deleted ?
       response.status(404).json({ error: 'A port matching the id submitted could not be found' })
       :
-      response.sendStatus(204) )
-    .catch( error => response.status(500).json({ error }) );
+      database('ports').where({ id }).del()
+        .then( deleted => !deleted ?
+        response.status(404).json({ error: 'A port matching the id submitted could not be found' })
+        :
+        response.sendStatus(204))
+        .catch( error => response.status(500).json({ error })))
+    .catch( error => response.status(500).json({ error }));
 });
 
 app.delete('/api/v1/ships/:id', (request, response) => {
