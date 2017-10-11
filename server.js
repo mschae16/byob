@@ -22,7 +22,18 @@ app.listen(app.get('port'), () => {
 
 app.get('/api/v1/ports', (request, response) => {
   database('ports').select()
-    .then( ports => response.status(200).json(ports) )
+    .then( ports => {
+      const portPromises = [];
+
+      ports.forEach( port => {
+        portPromises.push(
+          database('port_usage').where({ port_id: port.id }).select()
+            .then( usage => Object.assign({}, port, { port_usage: usage[0] }))
+        )
+          })
+      return Promise.all(portPromises)
+    })
+    .then( result => response.status(200).json(result))
     .catch( error => response.status(500).json({ error }))
 });
 
