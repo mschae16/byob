@@ -53,6 +53,7 @@ const createPort = (knex, port) => {
 
     return Promise.all([portPromise, ...shipPromises]);
   })
+  .catch(error => console.error('Error seeding data', error))
 };
 
 exports.seed = (knex, Promise) => {
