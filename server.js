@@ -100,18 +100,18 @@ app.post('/api/v1/ports', (request, response) => {
   for (let requiredParameter of [
     'cargo_vessels',
     'fishing_vessels',
-    'various',
-    'tankers',
-    'tug_offshore_supply',
+    'various_vessels',
+    'tanker_vessels',
+    'tug_offshore_supply_vessels',
     'passenger_vessels',
-    'authority_military',
+    'authority_military_vessels',
     'sailing_vessels',
-    'aids_to_nav'
+    'aid_to_nav_vessels'
   ]) {
     if (!portObject.port_usage[requiredParameter]) {
       return response
         .status(422)
-        .send({ error: `Expected format: port_usage: { cargo_vessles: <String>, fishing_vessles: <String>, various: <String>, tankers: <String>, tug_offshore_supply: <String>, passenger_vessels: <String>, authority_military: <String>, sailing_vessels: <String>, aids_to_nav: <String> }. You're missing a ${requiredParameter} property.` });
+        .send({ error: `Expected format: port_usage: { cargo_vessels: <String>, fishing_vessels: <String>, various_vessels: <String>, tanker_vessels: <String>, tug_offshore_supply_vessels: <String>, passenger_vessels: <String>, authority_military_vessels: <String>, sailing_vessels: <String>, aid_to_nav_vessels: <String> }. You're missing a ${requiredParameter} property.` });
     }
   };
 
@@ -135,18 +135,8 @@ app.post('/api/v1/ports', (request, response) => {
         aids_to_nav
       } = portObject.port_usage;
 
-      database('port_usage').insert({
-      cargo_vessels,
-      fishing_vessels,
-      various_vessels: various,
-      tanker_vessels: tankers,
-      tug_offshore_supply_vessels: tug_offshore_supply,
-      passenger_vessels,
-      authority_military_vessels: authority_military,
-      sailing_vessels,
-      aid_to_nav_vessels: aids_to_nav,
-      port_id: port[0].id 
-      }, '*')
+      database('port_usage').insert(
+      Object.assign({}, portObject.port_usage, { port_id: port[0].id }), '*')
       .then( result => {
         response.status(201).json(Object.assign({}, port[0], { port_usage: result[0] }))
       })
@@ -206,5 +196,74 @@ app.delete('/api/v1/ships/:id', (request, response) => {
     .catch( error => response.status(500).json({ error }) );
 });
 
+app.patch('/api/v1/ships/:id', (request, response) => {
+  const { id } = request.params;
+  const { ship_country, ship_type, ship_status, ship_current_port } = request.body;
+
+  if (!ship_country && !ship_type && !ship_status && !ship_current_port) {
+        return response.status(422).send({ error: "Expected format: { ship_country: <String>, ship_type: <String>, ship_status: <String>, <String>, ship_current_port: <Integer> }. You're missing a valid property." });
+  }
+
+  database('ships').where({ id })
+  .update({
+    ship_country,
+    ship_type,
+    ship_status,
+    ship_current_port
+  }, '*')
+  .then( update => response.status(200).json(update))
+  .catch( error => response.status(500).json({ error }));
+});
+
+app.patch('/api/v1/ports/:id', (request, response) => {
+  const { id } = request.params;
+  const { port_max_vessel_size, port_total_ships } = request.body;
+
+  if (!port_max_vessel_size && !port_total_ships) {
+        return response.status(422).send({ error: "Expected format: { port_max_vessel_size: <String>, port_total_ships: <Integer>." });
+  }
+
+  database('ports').where({ id })
+  .update({
+    port_max_vessel_size,
+    port_total_ships
+  }, '*')
+  .then( update => response.status(200).json(update))
+  .catch( error => response.status(500).json({ error }));
+});
+
+app.put('/api/v1/port-usage/:id', (request, response) => {
+  const { id } = request.params;
+
+  if (request.body.port_id) {
+    return response
+    .status(422)
+    .send({ error: 'You are not authorized to change the port id' });
+  }
+  
+
+  for (let requiredParameter of [
+    'cargo_vessels',
+    'fishing_vessels',
+    'various_vessels',
+    'tanker_vessels',
+    'tug_offshore_supply_vessels',
+    'passenger_vessels',
+    'authority_military_vessels',
+    'sailing_vessels',
+    'aid_to_nav_vessels'
+  ]) {
+    if (!request.body[requiredParameter]) {
+      return response
+        .status(422)
+        .send({ error: `Expected format: { cargo_vessels: <String>, fishing_vessels: <String>, various_vessels: <String>, tanker_vessels: <String>, tug_offshore_supply_vessels: <String>, passenger_vessels: <String>, authority_military_vessels: <String>, sailing_vessels: <String>, aid_to_nav_vessels: <String> }. You're missing a ${requiredParameter} property.` });
+    }
+  };
+
+  database('port_usage').where({ port_id: id })
+  .update(request.body, '*')
+  .then( update => response.status(200).json(update))
+  .catch( error => response.status(500).json({ error }));
+});
 
 module.exports = app;
