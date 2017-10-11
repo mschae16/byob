@@ -67,3 +67,88 @@ app.get('/api/v1/ships/:id', (request, response) => {
     .then( ship => response.status(200).json(ship))
     .catch( error => response.status(500).json({ error }))
 });
+
+app.post('/api/v1/ports', (request, response) => {
+  const portObject = request.body;
+  for (let requiredParameter of [
+    'port_name',
+    'port_locode',
+    'port_max_vessel_size',
+    'port_total_ships',
+    'port_country',
+    'port_usage'
+  ]) {
+      if (!portObject[requiredParameter]) {
+        return response
+          .status(422)
+          .send({ error: `Expected format: { port_name: <String>, port_locode: <String>, port_max_vessel_size: <String>, port_total_ships: <String>, port_country: <String>, port_usage: <Object> }. You're missing a ${requiredParameter} property.` });
+      }
+    }
+
+  database('ports').insert({
+    port_name: portObject.port_name,
+    port_locode: portObject.port_locode,
+    port_max_vessel_size: portObject.port_max_vessel_size,
+    port_total_ships: portObject.port_total_ships,
+    port_country: portObject.port_country,
+  }, 'id')
+    .then( portId => {
+      const {
+        cargo_vessels,
+        fishing_vessels,
+        various,
+        tankers,
+        tug_offshore_supply,
+        passenger_vessels,
+        authority_military,
+        sailing_vessels,
+        aids_to_nav
+      } = portObject.port_usage;
+      database('port_usage').insert({
+        cargo_vessels,
+        fishing_vessels,
+        various_vessels: various,
+        tanker_vessels: tankers,
+        tug_offshore_supply_vessels: tug_offshore_supply,
+        passenger_vessels,
+        authority_military_vessels: authority_military,
+        sailing_vessels,
+        aid_to_nav_vessels: aids_to_nav,
+        port_id: portId
+      })
+    })
+    .then( () => {
+      response.status(201).json({ message: 'New port created.'})
+    })
+    .catch( error => {
+      response.status(500).json({ error });
+    });
+});
+
+app.post('/api/v1/ships', (request, response) => {
+  const shipObject = request.body;
+  for (let requiredParameter of [
+    'ship_name',
+    'ship_country',
+    'ship_type',
+    'ship_length',
+    'ship_imo',
+    'ship_status',
+    'ship_mmsi_callsign',
+    'ship_current_port'
+  ]) {
+      if (!shipObject[requiredParameter]) {
+        return response
+          .status(422)
+          .send({ error: `Expected format: { ship_name: <String>, ship_country: <String>, ship_type: <String>, ship_length: <String>, ship_imo: <String>, ship_status: <String>, ship_mmsi_callsign: <String>, ship_current_port: <Integer> }. You're missing a ${requiredParameter} property.` });
+      }
+    }
+
+  database('ships').insert(shipObject, '*')
+    .then( ship => {
+      response.status(201).json(ship)
+    })
+    .catch( error => {
+      response.status(500).json({ error });
+    });
+});
