@@ -206,5 +206,23 @@ app.delete('/api/v1/ships/:id', (request, response) => {
     .catch( error => response.status(500).json({ error }) );
 });
 
+app.patch('/api/v1/ships/:id', (request, response) => {
+  const { id } = request.params;
+  const { ship_country, ship_type, ship_status, ship_current_port } = request.body;
+
+  if (!ship_country && !ship_type && !ship_status && !ship_current_port) {
+        return response.status(422).send({ error: "ur dumb" });
+  }
+
+  database('ships').where({ id })
+  .update({
+    ship_country,
+    ship_type,
+    ship_status,
+    ship_current_port
+  }, '*')
+  .then( update => response.status(200).json(update))
+  .catch( error => response.status(500).json({ error }));
+});
 
 module.exports = app;
