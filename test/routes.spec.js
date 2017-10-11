@@ -46,6 +46,19 @@ describe('API Routes', () => {
         .catch( (error) => console.log(error) );
     });
 
-
+    describe('GET /api/v1/ports', () => {
+      it('should retrieve all ports', (done) => {
+        chai.request(server)
+          .get('/api/v1/ports')
+          .end( (error, response) => {
+            response.should.have.status(200);
+            response.should.be.json;
+            response.body.should.be.a('array');
+            response.body.length.should.equal(6);
+            response.body[0].should.have.property('port_name');
+            done();
+          });
+      });
+    });
 
 });
