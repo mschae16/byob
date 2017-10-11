@@ -62,9 +62,8 @@ exports.seed = (knex, Promise) => {
   .then(() => knex('ports').del()))
   .then(() => {
     let portPromises = [];
-    let parsedPorts = ports;
 
-      parsedPorts.forEach( port => {
+      ports.forEach( port => {
       portPromises.push(createPort(knex, port));
     })
     return Promise.all(portPromises)

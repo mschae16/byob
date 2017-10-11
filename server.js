@@ -121,8 +121,8 @@ app.post('/api/v1/ports', (request, response) => {
     port_max_vessel_size: portObject.port_max_vessel_size,
     port_total_ships: portObject.port_total_ships,
     port_country: portObject.port_country,
-  }, 'id')
-    .then( portId => {
+  }, '*')
+    .then( port => {
       const {
         cargo_vessels,
         fishing_vessels,
@@ -134,20 +134,23 @@ app.post('/api/v1/ports', (request, response) => {
         sailing_vessels,
         aids_to_nav
       } = portObject.port_usage;
+
       database('port_usage').insert({
-        cargo_vessels,
-        fishing_vessels,
-        various_vessels: various,
-        tanker_vessels: tankers,
-        tug_offshore_supply_vessels: tug_offshore_supply,
-        passenger_vessels,
-        authority_military_vessels: authority_military,
-        sailing_vessels,
-        aid_to_nav_vessels: aids_to_nav,
-        port_id: portId
+      cargo_vessels,
+      fishing_vessels,
+      various_vessels: various,
+      tanker_vessels: tankers,
+      tug_offshore_supply_vessels: tug_offshore_supply,
+      passenger_vessels,
+      authority_military_vessels: authority_military,
+      sailing_vessels,
+      aid_to_nav_vessels: aids_to_nav,
+      port_id: port[0].id
+      }, '*')
+      .then( result => {
+        response.status(201).json(Object.assign({}, port[0], { port_usage: result[0] }))
       })
-      .then( () => response.status(201).json({ message: 'New port created.' }))
-      .catch( error => response.status(500).json({ error }))
+      .catch( error => response.status(500).json({ error }));
     })
     .catch( error => response.status(500).json({ error }));
 });
