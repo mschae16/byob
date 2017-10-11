@@ -174,3 +174,6 @@ app.delete('/api/v1/ships/:id', (request, response) => {
       response.sendStatus(204) )
     .catch( error => response.status(500).json({ error }) );
 });
+
+
+module.exports = app;
