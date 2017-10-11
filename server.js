@@ -52,7 +52,7 @@ app.get('/api/v1/ports/:id', (request, response) => {
 
 app.get('/api/v1/ships/:id', (request, response) => {
   const { id } = request.params
-  database('ships').select()
+  database('ships').where({ id }).select()
     .then( ship => response.status(200).json(ship))
     .catch( error => response.status(500).json({ error }))
 });
