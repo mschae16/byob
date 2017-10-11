@@ -59,6 +59,40 @@ describe('API Routes', () => {
             done();
           });
       });
+
+      it('should return a 404 if the url is incorrect', (done) => {
+      chai.request(server)
+        .get('/api/v1/portsss')
+        .end( (error, response) => {
+          response.should.have.status(404);
+          done();
+        });
+      });
     });
+
+    describe('GET /api/v1/ships', () => {
+      it('should retrieve all ships', (done) => {
+        chai.request(server)
+          .get('/api/v1/ships')
+          .end( (error, response) => {
+            response.should.have.status(200);
+            response.should.be.json;
+            response.body.should.be.a('array');
+            response.body.length.should.equal(300);
+            response.body[0].should.have.property('ship_name');
+            done();
+          });
+      });
+
+      it('should return a 404 if the url is incorrect', (done) => {
+        chai.request(server)
+          .get('/api/v1/shipsss')
+          .end( (error, response) => {
+            response.should.have.status(404);
+            done();
+          });
+      });
+    });
+
 
 });
