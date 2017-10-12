@@ -253,18 +253,23 @@ app.delete('/api/v1/ports/:id', checkAuth, (request, response) => {
   database('port_usage').where({ port_id: id }).del()
     .then( deleted => {
       if (!deleted) {
-        return response.status(404).json({ error: 'A port matching the id submitted could not be found' })
+        return response.status(404).json({ error: 'A port matching the id submitted could not be found.' })
       }
+      return id;
+    })
+    .then( id => {
       database('ports').where({ id }).del()
         .then( deleted => {
+          console.log('deleted ports', deleted);
           if (!deleted) {
-            return response.status(404).json({ error: 'A port matching the id submitted could not be found' })
+            return response.status(404).json({ error: 'A port matching the id submitted could not be found.' })
+          } else {
+            return response.sendStatus(204)
           }
-        return response.sendStatus(204)
         })
         .catch( error => response.status(500).json({ error }))
     })
-    .catch( error => response.status(500).json({ error }));
+    .catch( error => response.status(500).json({ error }))
 });
 
 app.delete('/api/v1/ships/:id', checkAuth, (request, response) => {
@@ -274,7 +279,7 @@ app.delete('/api/v1/ships/:id', checkAuth, (request, response) => {
   database('ships').where({ id }).del()
     .then( deleted => {
       if (!deleted) {
-        return response.status(404).json({ error: 'A ship matching the id submitted could not be found' })
+        return response.status(404).json({ error: 'A ship matching the id submitted could not be found.' })
       }
       return response.sendStatus(204)
     })
