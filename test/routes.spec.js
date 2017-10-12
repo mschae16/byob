@@ -447,6 +447,152 @@ describe('API Routes', () => {
       });
     });
 
+    describe('PATCH /api/v1/ports/:id', () => {
+      it('Should update the ports database with a patch request', () => {
+        const mockObject = {
+          total_ships_at_port: "232",
+      };
+
+      chai.request(server)
+        .get('/api/v1/ports/10')
+        .set('Authorization', token)
+        .end( (error, response) => {
+          response.should.have.status(200);
+          response.should.be.json;
+          response.body[0].should.have.property('port_total_ships');
+          response.body[0].port_total_ships.should.equal(118)          
+        })
+
+      chai.request(server)
+        .patch('/api/v1/ports/10')
+        .set('Authorization', token)        
+        .send(mockObject)
+        .end( (error, response) => {
+            response.should.have.status(200);
+            response.should.be.json;
+            response.should.be.a('array');
+            resopnse.body.length.should.equal(1);
+            response.body[0].should.have.property('port_total_ships');
+            response.body[0].port_total_ships.should.not.equal(118);
+            response.body[0].port_total_ships.should.equal(232);
+
+            chai.request(server)
+            .get('/api/v1/ports/10')
+            .set('Authorization', token)
+            .end( (error, response) => {
+              response.should.have.status(200);
+              response.body.should.be.a('array');
+              response.body.length.should.equal(4);
+            });
+        });
+      });
+
+      it('Should not update the port database when trying to update a parameter that can\'t be changed', () => {
+        const mockObject = {
+          port_locode: 'RUCCO'
+        }
+
+        chai.request(server)
+          .get('/api/v1/ports/10')
+          .set('Authorization', token)
+          .end( (error, response) => {
+            response.should.have.status(200);
+            response.should.be.json;
+            response.body[0].should.have.property('port_locode');
+            response.body[0].port_locode.should.equal('RUVVO')          
+          });
+
+        chai.request(server)
+          .post('/api/v1/ports/10')
+          .set('Authorization', token)
+          .send(mockObject)
+          .end( (error, response) => {
+              response.should.have.status(422);
+              response.should.be.json;
+              response.body.error.should.equal("Expected format: { port_max_vessel_size: <String>, port_total_ships: <Integer>.")      
+          });
+
+        chai.request(server)
+          .get('/api/v1/ports/10')
+          .set('Authorization', token)
+          .end( (error, response) => {
+            response.should.have.status(200);
+            response.should.be.json;
+            response.body[0].should.have.property('port_locode');
+            response.body[0].port_locode.should.equal('RUVVO')        
+          });
+        });
+    });
+
+    describe('PATCH /api/v1/ships/:id', () => {
+      it('Should update the ships database with a patch request', () => {
+        const mockObject = {
+          ship_status: 'underway using engine'
+        }
+
+        chai.request(server)
+          .get('/api/v1/ships/1')
+          .set('Authorization', token)
+          .end( (error, response) => {
+            response.should.have.status(200);
+            response.should.be.json;
+            response.body[0].should.have.property('ship_status');
+            response.body[0].ship_status.should.equal('moored')          
+          })
+
+        chai.request(server)
+          .patch('/api/v1/ships/1')
+          .set('Authorization', token)        
+          .send(mockObject)
+          .end( (error, response) => {
+              response.should.have.status(200);
+              response.should.be.json;
+              response.body.should.be.a('array');
+              response.body.length.should.equal(1);
+              response.body[0].should.have.property('ship_status');
+              response.body[0].ship_status.should.not.equal('moored');
+              response.body[0].ship_status.should.equal('underway using engine');
+        });
+      });
+
+      it('Should not update the ships database when trying to update a parameter that can\'t be changed', () => {
+        const mockObject = {
+          ship_name: 'Boaty McBoatface'
+        }
+
+        chai.request(server)
+          .get('/api/v1/ships/1')
+          .set('Authorization', token)
+          .end( (error, response) => {
+            response.should.have.status(200);
+            response.should.be.json;
+            response.body.should.have.property('ship_name');
+            response.body[0].ship_name.should.equal('IRBIS')          
+          });
+
+        chai.request(server)
+          .post('/api/v1/ports')
+          .set('Authorization', token)
+          .send(mockObject)
+          .end( (error, response) => {
+              response.should.have.status(422);
+              response.should.be.json;
+              response.body.error.should.equal("Expected format: { ship_country: <String>, ship_type: <String>, ship_status: <String>, <String>, ship_current_port: <Integer> }. You're missing a valid property.")      
+          });
+
+        chai.request(server)
+          .get('/api/v1/ships/1')
+          .set('Authorization', token)
+          .end( (error, response) => {
+            response.should.have.status(200);
+            response.should.be.json;
+            response.body.should.have.property('ship_name');
+            response.body[0].ship_name.should.equal('IRBIS')            
+          });
+        });
+    });
+});
+
     describe('PUT /api/v1/port-usage/:id', () => {
       it('should update all values in port-usage table', (done) => {
         const mockObject = {
