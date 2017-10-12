@@ -214,7 +214,7 @@ describe('API Routes', () => {
     });
 
     describe('GET /api/v1/ships/:id', () => {
-      it.skip('should retrieve a single ship based on the id submitted in the url', (done) => {
+      it('should retrieve a single ship based on the id submitted in the url', (done) => {
         chai.request(server)
           .get('/api/v1/ships/5')
           .set('Authorization', token)
@@ -311,7 +311,7 @@ describe('API Routes', () => {
             chai.request(server)
               .get('/api/v1/ports')
               .set('Authorization', token)
-              .end( (error, response) => {
+              .end( (error, response) => {                
                 response.should.have.status(200);
                 response.body.should.be.a('array');
                 response.body.length.should.equal(3);
@@ -357,5 +357,4 @@ describe('API Routes', () => {
           });
       });
     });
-
 });
