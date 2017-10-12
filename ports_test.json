@@ -1,5 +1,6 @@
 [
     {
+        "id": "10",
         "port_name": "Vladivostok",
         "port_locode": "RUVVO",
         "port_usage": {
@@ -15,10 +16,10 @@
         },
         "max_vessel_size": "150m",
         "total_ships_at_port": "118",
-        "country": "Russia",
-        "id": "10"
+        "country": "Russia"
     },
     {
+        "id": "20",
         "port_name": "Shekou (Shenzhen)",
         "port_locode": "CNSZP",
         "port_usage": {
@@ -34,10 +35,10 @@
         },
         "max_vessel_size": "unavailable",
         "total_ships_at_port": "721",
-        "country": "China",
-        "id": "20"
+        "country": "China"
     },
     {
+        "id": "30",
         "port_name": "Busan",
         "port_locode": "KRPUS",
         "port_usage": {
@@ -53,7 +54,6 @@
         },
         "max_vessel_size": "unavailable",
         "total_ships_at_port": "521",
-        "country": "South Korea",
-        "id": "30"
+        "country": "South Korea"
     }
 ]
