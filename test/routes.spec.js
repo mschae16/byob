@@ -481,7 +481,7 @@ describe('API Routes', () => {
     });
 
     describe('DELETE /api/v1/ports/:id', () => {
-      it('should delete a port from database', (done) => {
+      it.skip('should delete a port from database', (done) => {
         chai.request(server)
           .delete('/api/v1/ports/20')
           .set('Authorization', token)
@@ -510,7 +510,6 @@ describe('API Routes', () => {
             done();
           });
       });
-
     });
 
 
