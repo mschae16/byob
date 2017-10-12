@@ -321,7 +321,7 @@ describe('API Routes', () => {
             chai.request(server)
               .get('/api/v1/ports')
               .set('Authorization', token)
-              .end( (error, response) => {                
+              .end( (error, response) => {
                 response.should.have.status(200);
                 response.body.should.be.a('array');
                 response.body.length.should.equal(3);
@@ -386,7 +386,7 @@ describe('API Routes', () => {
           .post('/api/v1/ships')
           .send(mockObject)
           .end( (error, response) => {
-            
+
             response.should.have.status(201);
             response.should.be.json;
             response.body.should.be.a('array');
@@ -412,7 +412,7 @@ describe('API Routes', () => {
             });
           });
       });
-      
+
       it('should not add a new ship if missing information', (done) => {
         const mockObject = {
           token,
@@ -446,4 +446,38 @@ describe('API Routes', () => {
           });
       });
     });
+
+
+    describe('PUT /api/v1/port-usage/:id', () => {
+      it('should update all values in port-usage table', (done) => {
+        const mockObject = {
+          cargo_vessels: '10%',
+          fishing_vessels: '10%',
+          various_vessels: '10%',
+          tanker_vessels: '10%',
+          tug_offshore_supply_vessels: '10%',
+          passenger_vessels: '10%',
+          authority_military_vessels: '10%',
+          sailing_vessels: '10%',
+          aid_to_nav_vessels: '10%'
+        }
+
+        chai.request(server)
+          .put('/api/v1/port-usage/20')
+          .set('Authorization', token)
+          .send(mockObject)
+          .end( (error, response) => {
+            response.should.have.status(200);
+            response.body.should.be.a('array');
+            response.body.length.should.equal(1);
+            response.body[0].should.include(mockObject);
+            done();
+          });
+      });
+
+
+    });
+
+
+
 });
