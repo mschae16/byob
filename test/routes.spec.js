@@ -243,6 +243,7 @@ describe('API Routes', () => {
       it('should add a new port to the ports table', (done) => {
         const mockObject = {
             token,
+            id: '40',
             port_name: 'Osaka',
             port_locode: 'JPOSA',
             port_usage: {
@@ -286,7 +287,16 @@ describe('API Routes', () => {
               response.body.port_usage.should.have.property('sailing_vessels');
               response.body.port_usage.should.have.property('aid_to_nav_vessels');
               response.body.port_usage.should.have.property('port_id');
-              done();
+
+              chai.request(server)
+              .get('/api/v1/ports')
+              .set('Authorization', token)
+              .end( (error, response) => {
+                response.should.have.status(200);
+                response.body.should.be.a('array');
+                response.body.length.should.equal(4);
+                done();
+              });
           });
       });
 
@@ -352,6 +362,85 @@ describe('API Routes', () => {
                 response.should.have.status(200);
                 response.body.should.be.a('array');
                 response.body.length.should.equal(3);
+                done();
+              });
+          });
+      });
+    });
+
+    describe('POST /api/v1/ships', () => {
+      it('should post a new ship to the database', (done) => {
+        const mockObject = {
+            token,
+            id: '11',
+            ship_status: 'moored',
+            ship_imo: '8978116',
+            ship_length: '105x16m',
+            ship_mmsi_callsign: '273626900\nUDLE',
+            ship_current_port: 10,
+            ship_country: 'Russia',
+            ship_name: 'JARGO',
+            ship_type: 'Trawler'
+        }
+        chai.request(server)
+          .post('/api/v1/ships')
+          .send(mockObject)
+          .end( (error, response) => {
+            
+            response.should.have.status(201);
+            response.should.be.json;
+            response.body.should.be.a('array');
+            response.body.length.should.equal(1)
+            response.body[0].should.have.property('id');
+            response.body[0].should.have.property('ship_status');
+            response.body[0].should.have.property('ship_imo');
+            response.body[0].should.have.property('ship_length');
+            response.body[0].should.have.property('ship_mmsi_callsign');
+            response.body[0].should.have.property('ship_current_port');
+            response.body[0].should.have.property('ship_country');
+            response.body[0].should.have.property('ship_name');
+            response.body[0].should.have.property('ship_type');
+
+            chai.request(server)
+            .get('/api/v1/ships')
+            .set('Authorization', token)
+            .end( (error, response) => {
+              response.should.have.status(200);
+              response.body.should.be.a('array');
+              response.body.length.should.equal(11);
+              done();
+            });
+          });
+      });
+      
+      it('should not add a new ship if missing information', (done) => {
+        const mockObject = {
+          token,
+          id: '11',
+          ship_imo: '8978116',
+          ship_length: '105x16m',
+          ship_mmsi_callsign: '273626900\nUDLE',
+          ship_current_port: 10,
+          ship_country: 'Russia',
+          ship_name: 'JARGO',
+          ship_type: 'Trawler'
+      }
+
+        chai.request(server)
+          .post('/api/v1/ships')
+          .send(mockObject)
+          .end( (error, response) => {
+            response.should.have.status(422);
+            response.should.be.json;
+            response.body.error.should.equal('Expected format: { ship_name: <String>, ship_country: <String>, ship_type: <String>, ship_length: <String>, ship_imo: <String>, ship_status: <String>, ship_mmsi_callsign: <String>, ship_current_port: <Integer> }. You\'re missing a ship_status property.');
+
+            chai.request(server)
+              .get('/api/v1/ships')
+              .set('Authorization', token)
+              .end( (error, response) => {
+                response.should.have.status(200);
+                response.body.should.be.a('array');
+                response.body.length.should.equal(10);
                 done();
               });
           });

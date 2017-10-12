@@ -125,15 +125,16 @@ app.get('/api/v1/ports/:id', checkToken, (request, response) => {
     .then( port => {
       if (!port.length) {
         return response.status(404).json({ error: 'There is no port with this id.' })
+      } else {
+        const portPromise = [];
+
+        portPromise.push(
+          database('port_usage').where({ port_id: id }).select()
+            .then( usage => Object.assign({}, port[0], { port_usage: usage[0] }))
+            .catch( error => response.status(500).json({ error }))
+        )
+          return Promise.all(portPromise)
       }
-
-      const portPromise = [];
-
-      portPromise.push(
-        database('port_usage').where({ port_id: id }).select()
-          .then( usage => Object.assign({}, port[0], { port_usage: usage[0] }))
-      )
-        return Promise.all(portPromise)
     })
     .then( port => response.status(200).json(port))
     .catch( error => response.status(500).json({ error }));
