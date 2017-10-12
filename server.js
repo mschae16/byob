@@ -123,7 +123,7 @@ app.get('/api/v1/ports/:id', checkToken, (request, response) => {
   database('ports').where({ id }).select()
     .then( port => {
       if (!port.length) {
-        response.status(404).json({ error: 'There is no port with this id' })
+        response.status(404).json({ error: 'There is no port with this id.' })
       }
 
       const portPromise = [];
@@ -142,7 +142,7 @@ app.get('/api/v1/ships/:id', checkToken, (request, response) => {
   const { id } = request.params
 
   database('ships').where({ id }).select()
-    .then( ship => !ship.length ? response.status(404).json({ error: 'There is no ship with this id' }):
+    .then( ship => !ship.length ? response.status(404).json({ error: 'There is no ship with this id.' }):
     response.status(200).json(ship))
     .catch( error => response.status(500).json({ error }))
 });
