@@ -2,6 +2,8 @@ const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
 const app = express();
+const jwt = require('jsonwebtoken');
+const localKey = require('./key.js');
 
 const environment = process.env.NODE_ENV || "development";
 const configuration = require("./knexfile")[environment];
@@ -12,15 +14,67 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.set('port', process.env.PORT || 3000);
+app.set('secretKey', process.env.SECRET_KEY || localKey);
 app.locals.title = 'BYOB';
 
 app.listen(app.get('port'), () => {
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
 });
 
+// AUTHENTICATION MIDDLEWARE
+
+const checkAuth = (request, response, next) => {
+  const token = request.headers.authorization;
+
+  if(!token) {
+    response.status(403).json({ error: 'You must be authorized to hit this endpoint.' });
+  } else {
+    jwt.verify(token, app.get('secretKey'), (err, decoded) => {
+      if (err) {
+        response.status(403).json({ error: 'Invalid token.' });
+      }
+      if (decoded) {
+        decoded.admin ? next()
+        :
+        response.status(403).json({ error: 'You are not authorized to have write access to this endpoint.' })
+      }
+    });
+  };
+}
+
+const checkToken = (request, response, next) => {
+  const token = request.headers.authorization;
+
+  if (!token) {
+    response.status(403).json({ error: 'You must be authorized to hit this endpoint.' });
+  } else {
+      jwt.verify(token, app.get('secretKey'), (err, decoded) => {
+        if (err) {
+          return response.status(403).json({ error: 'Invalid token.' });
+        }
+        next();
+      });
+  }
+}
+
 // ENDPOINTS
 
-app.get('/api/v1/ports', (request, response) => {
+app.post('/api/v1/user/authenticate', (request, response) => {
+  const { email, app_name } = request.body;
+  if (!email || !app_name) {
+    response.status(422).json({ error: 'You are missing a required parameter. Please include both email address and the name of your application.'});
+  }
+  const emailSuffix = email.split('@')[1];
+  emailSuffix === 'turing.io' ?
+    const user = Object.assign({}, request.body, { admin: true })
+    :
+    const user = Object.assign({}, request.body, { admin: false })
+
+  const token = jwt.sign(user, app.get('secretKey'), { expiresIn: '48h' });
+  response.status(201).json({ token });
+});
+
+app.get('/api/v1/ports', checkToken, (request, response) => {
   database('ports').select()
     .then( ports => {
       const portPromises = [];
@@ -37,19 +91,19 @@ app.get('/api/v1/ports', (request, response) => {
     .catch( error => response.status(500).json({ error }))
 });
 
-app.get('/api/v1/port-usage', (request, response) => {
+app.get('/api/v1/port-usage', checkToken, (request, response) => {
   database('port_usage').select()
     .then( ports => response.status(200).json(ports) )
     .catch( error => response.status(500).json({ error }))
 });
 
-app.get('/api/v1/ships', (request, response) => {
+app.get('/api/v1/ships', checkToken, (request, response) => {
   database('ships').select()
     .then( ships => response.status(200).json(ships))
     .catch( error => response.status(500).json({ error }))
 });
 
-app.get('/api/v1/ports/:id', (request, response) => {
+app.get('/api/v1/ports/:id', checkToken, (request, response) => {
   const { id } = request.params
 
   database('ports').where({ id }).select()
@@ -59,7 +113,7 @@ app.get('/api/v1/ports/:id', (request, response) => {
       }
 
       const portPromise = [];
-  
+
       portPromise.push(
         database('port_usage').where({ port_id: id }).select()
           .then( usage => Object.assign({}, port[0], { port_usage: usage[0] }))
@@ -70,7 +124,7 @@ app.get('/api/v1/ports/:id', (request, response) => {
     .catch( error => response.status(500).json({ error }));
 });
 
-app.get('/api/v1/ships/:id', (request, response) => {
+app.get('/api/v1/ships/:id', checkToken, (request, response) => {
   const { id } = request.params
 
   database('ships').where({ id }).select()
@@ -79,7 +133,7 @@ app.get('/api/v1/ships/:id', (request, response) => {
     .catch( error => response.status(500).json({ error }))
 });
 
-app.post('/api/v1/ports', (request, response) => {
+app.post('/api/v1/ports', checkAuth, (request, response) => {
   const portObject = request.body;
 
   for (let requiredParameter of [
@@ -145,7 +199,7 @@ app.post('/api/v1/ports', (request, response) => {
     .catch( error => response.status(500).json({ error }));
 });
 
-app.post('/api/v1/ships', (request, response) => {
+app.post('/api/v1/ships', checkAuth, (request, response) => {
   const shipObject = request.body;
   for (let requiredParameter of [
     'ship_name',
@@ -169,7 +223,7 @@ app.post('/api/v1/ships', (request, response) => {
     .catch( error => response.status(500).json({ error }));
 });
 
-app.delete('/api/v1/ports/:id', (request, response) => {
+app.delete('/api/v1/ports/:id', checkAuth, (request, response) => {
   const { id } = request.params;
 
   database('port_usage').where({ port_id: id }).del()
@@ -185,7 +239,7 @@ app.delete('/api/v1/ports/:id', (request, response) => {
     .catch( error => response.status(500).json({ error }));
 });
 
-app.delete('/api/v1/ships/:id', (request, response) => {
+app.delete('/api/v1/ships/:id', checkAuth, (request, response) => {
   const { id } = request.params;
 
   database('ships').where({ id }).del()
@@ -196,7 +250,7 @@ app.delete('/api/v1/ships/:id', (request, response) => {
     .catch( error => response.status(500).json({ error }) );
 });
 
-app.patch('/api/v1/ships/:id', (request, response) => {
+app.patch('/api/v1/ships/:id', checkAuth, (request, response) => {
   const { id } = request.params;
   const { ship_country, ship_type, ship_status, ship_current_port } = request.body;
 
@@ -215,7 +269,7 @@ app.patch('/api/v1/ships/:id', (request, response) => {
   .catch( error => response.status(500).json({ error }));
 });
 
-app.patch('/api/v1/ports/:id', (request, response) => {
+app.patch('/api/v1/ports/:id', checkAuth, (request, response) => {
   const { id } = request.params;
   const { port_max_vessel_size, port_total_ships } = request.body;
 
@@ -232,7 +286,7 @@ app.patch('/api/v1/ports/:id', (request, response) => {
   .catch( error => response.status(500).json({ error }));
 });
 
-app.put('/api/v1/port-usage/:id', (request, response) => {
+app.put('/api/v1/port-usage/:id', checkAuth, (request, response) => {
   const { id } = request.params;
 
   if (request.body.port_id) {
@@ -240,7 +294,7 @@ app.put('/api/v1/port-usage/:id', (request, response) => {
     .status(422)
     .send({ error: 'You are not authorized to change the port id' });
   }
-  
+
 
   for (let requiredParameter of [
     'cargo_vessels',
