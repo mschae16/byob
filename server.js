@@ -24,7 +24,7 @@ app.listen(app.get('port'), () => {
 // AUTHENTICATION MIDDLEWARE
 
 const checkAuth = (request, response, next) => {
-  const token = request.headers.authorization;
+  const token = request.headers.authorization || request.query.token || request.body.token;
 
   if(!token) {
     response.status(403).json({ error: 'You must be authorized to hit this endpoint.' });
@@ -43,7 +43,7 @@ const checkAuth = (request, response, next) => {
 }
 
 const checkToken = (request, response, next) => {
-  const token = request.headers.authorization;
+  const token = request.headers.authorization || request.query.token || request.body.token;
 
   if (!token) {
     response.status(403).json({ error: 'You must be authorized to hit this endpoint.' });
@@ -118,7 +118,7 @@ app.get('/api/v1/ships', checkToken, (request, response) => {
 });
 
 app.get('/api/v1/ports/:id', checkToken, (request, response) => {
-  const { id } = request.params
+  const { id } = request.params;
 
   database('ports').where({ id }).select()
     .then( port => {
@@ -139,16 +139,21 @@ app.get('/api/v1/ports/:id', checkToken, (request, response) => {
 });
 
 app.get('/api/v1/ships/:id', checkToken, (request, response) => {
-  const { id } = request.params
+  const { id } = request.params;
 
   database('ships').where({ id }).select()
-    .then( ship => !ship.length ? response.status(404).json({ error: 'There is no ship with this id.' }):
-    response.status(200).json(ship))
+    .then( ship => {
+      !ship.length ?
+        response.status(404).json({ error: 'There is no ship with this id.' })
+        :
+        response.status(200).json(ship)
+    })
     .catch( error => response.status(500).json({ error }))
 });
 
 app.post('/api/v1/ports', checkAuth, (request, response) => {
   const portObject = request.body;
+  delete request.body.token;
 
   for (let requiredParameter of [
     'port_name',
@@ -215,6 +220,8 @@ app.post('/api/v1/ports', checkAuth, (request, response) => {
 
 app.post('/api/v1/ships', checkAuth, (request, response) => {
   const shipObject = request.body;
+  delete request.body.token;
+
   for (let requiredParameter of [
     'ship_name',
     'ship_country',
@@ -239,6 +246,7 @@ app.post('/api/v1/ships', checkAuth, (request, response) => {
 
 app.delete('/api/v1/ports/:id', checkAuth, (request, response) => {
   const { id } = request.params;
+  delete request.body.token;
 
   database('port_usage').where({ port_id: id }).del()
     .then( deleted => !deleted ?
@@ -255,6 +263,7 @@ app.delete('/api/v1/ports/:id', checkAuth, (request, response) => {
 
 app.delete('/api/v1/ships/:id', checkAuth, (request, response) => {
   const { id } = request.params;
+  delete request.body.token;
 
   database('ships').where({ id }).del()
     .then( deleted => !deleted ?
@@ -302,6 +311,7 @@ app.patch('/api/v1/ports/:id', checkAuth, (request, response) => {
 
 app.put('/api/v1/port-usage/:id', checkAuth, (request, response) => {
   const { id } = request.params;
+  delete request.body.token;
 
   if (request.body.port_id) {
     return response
@@ -333,5 +343,6 @@ app.put('/api/v1/port-usage/:id', checkAuth, (request, response) => {
   .then( update => response.status(200).json(update))
   .catch( error => response.status(500).json({ error }));
 });
+
 
 module.exports = app;
