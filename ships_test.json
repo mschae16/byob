@@ -1,0 +1,102 @@
+[
+    {
+        "current_status": "moored",
+        "imo_number": "8422175",
+        "length": "81x16m",
+        "mmsi_callsign": "273141100\nUGDT",
+        "port": "Vladivostok",
+        "ship_country": "Russia",
+        "ship_name": "IRBIS",
+        "type": "Supply vessel"
+    },
+    {
+        "current_status": "moored",
+        "imo_number": "8878116",
+        "length": "105x16m",
+        "mmsi_callsign": "273426900\nUDLE",
+        "port": "Vladivostok",
+        "ship_country": "Russia",
+        "ship_name": "BEREZINA",
+        "type": "Trawler"
+    },
+    {
+        "current_status": "–––",
+        "imo_number": "–––",
+        "length": "49x16m",
+        "mmsi_callsign": "413900666\n0",
+        "port": "Shekou (Shenzhen)",
+        "ship_country": "China",
+        "ship_name": "RONG HANG 198",
+        "type": "Cargo ship"
+    },
+    {
+        "current_status": "at anchor",
+        "imo_number": "–––",
+        "length": "52x10m",
+        "mmsi_callsign": "413490690\n–––",
+        "port": "Shekou (Shenzhen)",
+        "ship_country": "China",
+        "ship_name": "KE LI YOU 3",
+        "type": "Tanker"
+    },
+    {
+        "current_status": "underway using engine",
+        "imo_number": "9450210",
+        "length": "91x18m",
+        "mmsi_callsign": "565603000\n9VNX2",
+        "port": "Singapore",
+        "ship_country": "Singapore",
+        "ship_name": "KIMTEK 1",
+        "type": "Oil tanker"
+    },
+    {
+        "current_status": "moored",
+        "imo_number": "9250957",
+        "length": "147x25m",
+        "mmsi_callsign": "563984000\n9V9257",
+        "port": "Singapore",
+        "ship_country": "Singapore",
+        "ship_name": "SINAR BINTAN",
+        "type": "Container ship"
+    },
+    {
+        "current_status": "not available",
+        "imo_number": "–––",
+        "length": "30x8m",
+        "mmsi_callsign": "440300350\n5801",
+        "port": "Busan",
+        "ship_country": "South Korea",
+        "ship_name": "NO 108 CHUNGRYONG",
+        "type": "Tug"
+    },
+    {
+        "current_status": "underway using engine",
+        "imo_number": "–––",
+        "length": "58x9m",
+        "mmsi_callsign": "440116340\n70019",
+        "port": "Busan",
+        "ship_country": "South Korea",
+        "ship_name": "TAEHWA1HO",
+        "type": "Tanker"
+    },
+    {
+        "current_status": "moored",
+        "imo_number": "8106446",
+        "length": "229x32m",
+        "mmsi_callsign": "477926400\nVRCT6",
+        "port": "Hong Kong",
+        "ship_country": "Hong Kong SAR of China",
+        "ship_name": "ZHEN HUA 22",
+        "type": "Heavy Lift Vessel"
+    },
+    {
+        "current_status": "moored",
+        "imo_number": "9523794",
+        "length": "100x18m",
+        "mmsi_callsign": "370421000\n3FWA7",
+        "port": "Hong Kong",
+        "ship_country": "Panama",
+        "ship_name": "RUN XIANG",
+        "type": "Liquefied gas carrier"
+    }
+]
