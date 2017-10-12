@@ -321,7 +321,7 @@ describe('API Routes', () => {
             chai.request(server)
               .get('/api/v1/ports')
               .set('Authorization', token)
-              .end( (error, response) => {                
+              .end( (error, response) => {
                 response.should.have.status(200);
                 response.body.should.be.a('array');
                 response.body.length.should.equal(3);
@@ -386,7 +386,7 @@ describe('API Routes', () => {
           .post('/api/v1/ships')
           .send(mockObject)
           .end( (error, response) => {
-            
+
             response.should.have.status(201);
             response.should.be.json;
             response.body.should.be.a('array');
@@ -412,7 +412,7 @@ describe('API Routes', () => {
             });
           });
       });
-      
+
       it('should not add a new ship if missing information', (done) => {
         const mockObject = {
           token,
@@ -446,4 +446,72 @@ describe('API Routes', () => {
           });
       });
     });
+
+    describe('DELETE /api/v1/ships/:id', () => {
+      it('should delete a ship from database', (done) => {
+        chai.request(server)
+          .delete('/api/v1/ships/7')
+          .set('Authorization', token)
+          .end( (error, response) => {
+            response.should.have.status(204);
+
+            chai.request(server)
+              .get('/api/v1/ships')
+              .set('Authorization', token)
+              .end( (error, response) => {
+                response.should.have.status(200);
+                response.body.should.be.a('array');
+                response.body.length.should.equal(9);
+                done();
+              });
+          });
+      });
+
+      it('should not delete a ship from database if incorrect id passed in', (done) => {
+        chai.request(server)
+          .delete('/api/v1/ships/666')
+          .set('Authorization', token)
+          .end( (error, response) => {
+            response.should.have.status(404);
+            response.body.error.should.equal('A ship matching the id submitted could not be found.');
+            done();
+          });
+      });
+
+    });
+
+    describe('DELETE /api/v1/ports/:id', () => {
+      it.skip('should delete a port from database', (done) => {
+        chai.request(server)
+          .delete('/api/v1/ports/20')
+          .set('Authorization', token)
+          .end( (error, response) => {
+            response.should.have.status(204);
+
+            chai.request(server)
+              .get('/api/v1/ports')
+              .set('Authorization', token)
+              .end( (error, response) => {
+                response.should.have.status(200);
+                response.body.should.be.a('array');
+                response.body.length.should.equal(2);
+                done();
+              });
+          });
+      });
+
+      it('should not delete a port from database if incorrect id is submitted', (done) => {
+        chai.request(server)
+          .delete('/api/v1/ports/99')
+          .set('Authorization', token)
+          .end( (error, response) => {
+            response.should.have.status(404);
+            response.body.error.should.equal('A port matching the id submitted could not be found.');
+            done();
+          });
+      });
+    });
+
+
+
 });
