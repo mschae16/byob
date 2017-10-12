@@ -10,3 +10,4 @@ ports.json
 
 # Secret key
 key.js
+token.js
