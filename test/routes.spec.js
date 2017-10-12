@@ -187,7 +187,56 @@ describe('API Routes', () => {
       });
     });
 
+    describe('GET /api/v1/ports/:id', () => {
+      it.skip('should retrieve a single port based on the id submitted in url', (done) => {
+        chai.request(server)
+          .get('/api/v1/ports/400')
+          .set('Authorization', token)
+          .end( (error, response) => {
+            response.should.have.status(200);
+            response.should.be.json;
+            response.body.should.be.a('array');
+            response.body.length.should.equal(1);
+            done();
+          });
+      });
 
+      it.skip('should return an error if no port exists with id submitted', (done) => {
+        chai.request(server)
+          .get('/api/v1/ports/2')
+          .set('Authorization', token)
+          .end( (error, response) => {
+            response.should.have.status(404);
+            response.body.error.should.equal('There is no port with this id.');
+            done();
+          });
+      });
+    });
 
+    describe('GET /api/v1/ships/:id', () => {
+      it.skip('should retrieve a single ship based on the id submitted in the url', (done) => {
+        chai.request(server)
+          .get('/api/v1/ports/1000')
+          .set('Authorization', token)
+          .end( (error, response) => {
+            response.should.have.status(200);
+            response.should.be.json;
+            response.body.should.be.a('array');
+            response.body.length.should.equal(300);
+            done();
+          });
+      });
+
+      it.skip('should return an error if no ship exists with id submitted', (done) => {
+        chai.request(server)
+          .get('/api/v1/ships/1')
+          .set('Authorization', token)
+          .end( (error, response) => {
+            response.should.have.status(404);
+            response.body.error.should.equal('There is no ship with this id.');
+            done();
+          });
+      });
+    });
 
 });
