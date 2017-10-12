@@ -88,7 +88,7 @@ describe('API Routes', () => {
             response.should.have.status(200);
             response.should.be.json;
             response.body.should.be.a('array');
-            response.body.length.should.equal(6);
+            response.body.length.should.equal(3);
             response.body[0].should.have.property('id');
             response.body[0].should.have.property('port_name');
             response.body[0].should.have.property('port_locode');
@@ -129,7 +129,7 @@ describe('API Routes', () => {
             response.should.have.status(200);
             response.should.be.json;
             response.body.should.be.a('array');
-            response.body.length.should.equal(6);
+            response.body.length.should.equal(3);
             response.body[0].should.have.property('cargo_vessels');
             response.body[0].should.have.property('fishing_vessels');
             response.body[0].should.have.property('various_vessels');
@@ -163,7 +163,7 @@ describe('API Routes', () => {
             response.should.have.status(200);
             response.should.be.json;
             response.body.should.be.a('array');
-            response.body.length.should.equal(300);
+            response.body.length.should.equal(10);
             response.body[0].should.have.property('id');
             response.body[0].should.have.property('ship_name');
             response.body[0].should.have.property('ship_country');
@@ -188,9 +188,9 @@ describe('API Routes', () => {
     });
 
     describe('GET /api/v1/ports/:id', () => {
-      it.skip('should retrieve a single port based on the id submitted in url', (done) => {
+      it('should retrieve a single port based on the id submitted in url', (done) => {
         chai.request(server)
-          .get('/api/v1/ports/400')
+          .get('/api/v1/ports/20')
           .set('Authorization', token)
           .end( (error, response) => {
             response.should.have.status(200);
@@ -201,9 +201,9 @@ describe('API Routes', () => {
           });
       });
 
-      it.skip('should return an error if no port exists with id submitted', (done) => {
+      it('should return an error if no port exists with id submitted', (done) => {
         chai.request(server)
-          .get('/api/v1/ports/2')
+          .get('/api/v1/ports/5')
           .set('Authorization', token)
           .end( (error, response) => {
             response.should.have.status(404);
@@ -214,22 +214,24 @@ describe('API Routes', () => {
     });
 
     describe('GET /api/v1/ships/:id', () => {
-      it.skip('should retrieve a single ship based on the id submitted in the url', (done) => {
+      it('should retrieve a single ship based on the id submitted in the url', (done) => {
         chai.request(server)
-          .get('/api/v1/ports/1000')
+          .get('/api/v1/ships/5')
           .set('Authorization', token)
           .end( (error, response) => {
+            console.log('response', response.status);
+            
             response.should.have.status(200);
-            response.should.be.json;
-            response.body.should.be.a('array');
-            response.body.length.should.equal(300);
+            // response.should.be.json;
+            // response.body.should.be.a('array');
+            // response.body.length.should.equal(1);
             done();
           });
       });
 
-      it.skip('should return an error if no ship exists with id submitted', (done) => {
+      it('should return an error if no ship exists with id submitted', (done) => {
         chai.request(server)
-          .get('/api/v1/ships/1')
+          .get('/api/v1/ships/99')
           .set('Authorization', token)
           .end( (error, response) => {
             response.should.have.status(404);
