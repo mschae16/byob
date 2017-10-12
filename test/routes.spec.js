@@ -475,6 +475,29 @@ describe('API Routes', () => {
           });
       });
 
+      it('should not update any values if missing information', (done) => {
+        const mockObject = {
+          cargo_vessels: '10%',
+          fishing_vessels: '10%',
+          various_vessels: '10%',
+          tanker_vessels: '10%',
+          tug_offshore_supply_vessels: '10%',
+          authority_military_vessels: '10%',
+          sailing_vessels: '10%',
+          aid_to_nav_vessels: '10%'
+        }
+
+        chai.request(server)
+          .put('/api/v1/port-usage/20')
+          .set('Authorization', token)
+          .send(mockObject)
+          .end( (error, response) => {
+            response.should.have.status(422);
+            response.body.error.should.equal('Expected format: { cargo_vessels: <String>, fishing_vessels: <String>, various_vessels: <String>, tanker_vessels: <String>, tug_offshore_supply_vessels: <String>, passenger_vessels: <String>, authority_military_vessels: <String>, sailing_vessels: <String>, aid_to_nav_vessels: <String> }. You\'re missing a passenger_vessels property.');
+            done();
+          });
+      });
+
 
     });
 
