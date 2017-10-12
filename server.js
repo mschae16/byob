@@ -27,16 +27,17 @@ const checkAuth = (request, response, next) => {
   const token = request.headers.authorization || request.query.token || request.body.token;
 
   if(!token) {
-    response.status(403).json({ error: 'You must be authorized to hit this endpoint.' });
+    return response.status(403).json({ error: 'You must be authorized to hit this endpoint.' });
   } else {
     jwt.verify(token, app.get('secretKey'), (err, decoded) => {
       if (err) {
-        response.status(403).json({ error: 'Invalid token.' });
+        return response.status(403).json({ error: 'Invalid token.' });
       }
       if (decoded) {
-        decoded.admin ? next()
-        :
-        response.status(403).json({ error: 'You are not authorized to have write access to this endpoint.' })
+        if (decoded.admin) {
+          return next();
+        }
+        return response.status(403).json({ error: 'You are not authorized to have write access to this endpoint.' })
       }
     });
   };
@@ -46,7 +47,7 @@ const checkToken = (request, response, next) => {
   const token = request.headers.authorization || request.query.token || request.body.token;
 
   if (!token) {
-    response.status(403).json({ error: 'You must be authorized to hit this endpoint.' });
+    return response.status(403).json({ error: 'You must be authorized to hit this endpoint.' });
   } else {
       jwt.verify(token, app.get('secretKey'), (err, decoded) => {
         if (err) {
@@ -63,7 +64,7 @@ app.post('/api/v1/user/authenticate', (request, response) => {
   const { email, app_name } = request.body;
   let user;
   if (!email || !app_name) {
-    response.status(422).json({ error: 'You are missing a required parameter. Please include both email address and the name of your application.'});
+    return response.status(422).json({ error: 'You are missing a required parameter. Please include both email address and the name of your application.'});
   }
   const emailSuffix = email.split('@')[1];
   emailSuffix === 'turing.io' ?
@@ -123,16 +124,17 @@ app.get('/api/v1/ports/:id', checkToken, (request, response) => {
   database('ports').where({ id }).select()
     .then( port => {
       if (!port.length) {
-        response.status(404).json({ error: 'There is no port with this id.' })
+        return response.status(404).json({ error: 'There is no port with this id.' })
+      } else {
+        const portPromise = [];
+
+        portPromise.push(
+          database('port_usage').where({ port_id: id }).select()
+            .then( usage => Object.assign({}, port[0], { port_usage: usage[0] }))
+            .catch( error => response.status(500).json({ error }))
+        )
+          return Promise.all(portPromise)
       }
-
-      const portPromise = [];
-
-      portPromise.push(
-        database('port_usage').where({ port_id: id }).select()
-          .then( usage => Object.assign({}, port[0], { port_usage: usage[0] }))
-      )
-        return Promise.all(portPromise)
     })
     .then( port => response.status(200).json(port))
     .catch( error => response.status(500).json({ error }));
@@ -143,10 +145,10 @@ app.get('/api/v1/ships/:id', checkToken, (request, response) => {
 
   database('ships').where({ id }).select()
     .then( ship => {
-      !ship.length ?
-        response.status(404).json({ error: 'There is no ship with this id.' })
-        :
-        response.status(200).json(ship)
+      if (!ship.length) {
+        return response.status(404).json({ error: 'There is no ship with this id.' })
+      }
+      return response.status(200).json(ship)
     })
     .catch( error => response.status(500).json({ error }))
 });
@@ -211,7 +213,7 @@ app.post('/api/v1/ports', checkAuth, (request, response) => {
       database('port_usage').insert(
       Object.assign({}, portObject.port_usage, { port_id: port[0].id }), '*')
       .then( result => {
-        response.status(201).json(Object.assign({}, port[0], { port_usage: result[0] }))
+        return response.status(201).json(Object.assign({}, port[0], { port_usage: result[0] }))
       })
       .catch( error => response.status(500).json({ error }));
     })
@@ -249,15 +251,19 @@ app.delete('/api/v1/ports/:id', checkAuth, (request, response) => {
   delete request.body.token;
 
   database('port_usage').where({ port_id: id }).del()
-    .then( deleted => !deleted ?
-      response.status(404).json({ error: 'A port matching the id submitted could not be found' })
-      :
+    .then( deleted => {
+      if (!deleted) {
+        return response.status(404).json({ error: 'A port matching the id submitted could not be found' })
+      }
       database('ports').where({ id }).del()
-        .then( deleted => !deleted ?
-        response.status(404).json({ error: 'A port matching the id submitted could not be found' })
-        :
-        response.sendStatus(204))
-        .catch( error => response.status(500).json({ error })))
+        .then( deleted => {
+          if (!deleted) {
+            return response.status(404).json({ error: 'A port matching the id submitted could not be found' })
+          }
+        return response.sendStatus(204)
+        })
+        .catch( error => response.status(500).json({ error }))
+    })
     .catch( error => response.status(500).json({ error }));
 });
 
@@ -266,10 +272,12 @@ app.delete('/api/v1/ships/:id', checkAuth, (request, response) => {
   delete request.body.token;
 
   database('ships').where({ id }).del()
-    .then( deleted => !deleted ?
-      response.status(404).json({ error: 'A ship matching the id submitted could not be found' })
-      :
-      response.sendStatus(204) )
+    .then( deleted => {
+      if (!deleted) {
+        return response.status(404).json({ error: 'A ship matching the id submitted could not be found' })
+      }
+      return response.sendStatus(204)
+    })
     .catch( error => response.status(500).json({ error }) );
 });
 
