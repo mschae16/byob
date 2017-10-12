@@ -242,6 +242,7 @@ describe('API Routes', () => {
     describe('POST /api/v1/ports', () => {
       it('should add a new port to the ports table', (done) => {
         const mockObject = {
+            token,
             port_name: 'Osaka',
             port_locode: 'JPOSA',
             port_usage: {
@@ -259,32 +260,100 @@ describe('API Routes', () => {
             port_total_ships: 745,
             port_country: 'Japan'
         }
+
         chai.request(server)
-          .get('/api/v1/ports?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hcmdvQHR1cmluZy5pbyIsImFwcF9uYW1lIjoiamFyZ28iLCJhZG1pbiI6dHJ1ZSwiaWF0IjoxNTA3ODM2MzMwLCJleHAiOjE1MDgwMDkxMzB9.mNOPHhd5hpde0mGl9wLJjAkPf7dqA9MeHUunLx43rxY')
-          .send(JSON.stringify(mockObject))
+          .post('/api/v1/ports')
+          .send(mockObject)
           .end( (error, response) => {
               response.should.have.status(201);
               response.should.be.json;
-              response.should.be.a('array');
-              response.body.length.should.equal(1);
-              response.body[0].should.not.have.property('token');
-              response.body[0].should.have.property('id');
-              response.body[0].should.have.property('port_name');
-              response.body[0].should.have.property('port_locode');
-              response.body[0].should.have.property('port_max_vessel_size');
-              response.body[0].should.have.property('port_total_ships');
-              response.body[0].should.have.property('port_country');
-              response.body[0].should.have.property('port_usage');
-              response.body[0].port_usage.should.have.property('cargo_vessels');
-              response.body[0].port_usage.should.have.property('fishing_vessels');
-              response.body[0].port_usage.should.have.property('various_vessels');
-              response.body[0].port_usage.should.have.property('tanker_vessels');
-              response.body[0].port_usage.should.have.property('tug_offshore_supply_vessels');
-              response.body[0].port_usage.should.have.property('passenger_vessels');
-              response.body[0].port_usage.should.have.property('authority_military_vessels');
-              response.body[0].port_usage.should.have.property('sailing_vessels');
-              response.body[0].port_usage.should.have.property('aid_to_nav_vessels');
-              response.body[0].port_usage.should.have.property('port_id');
+              response.should.be.a('object');
+              response.body.should.not.have.property('token');
+              response.body.should.have.property('id');
+              response.body.should.have.property('port_name');
+              response.body.should.have.property('port_locode');
+              response.body.should.have.property('port_max_vessel_size');
+              response.body.should.have.property('port_total_ships');
+              response.body.should.have.property('port_country');
+              response.body.should.have.property('port_usage');
+              response.body.port_usage.should.have.property('cargo_vessels');
+              response.body.port_usage.should.have.property('fishing_vessels');
+              response.body.port_usage.should.have.property('various_vessels');
+              response.body.port_usage.should.have.property('tanker_vessels');
+              response.body.port_usage.should.have.property('tug_offshore_supply_vessels');
+              response.body.port_usage.should.have.property('passenger_vessels');
+              response.body.port_usage.should.have.property('authority_military_vessels');
+              response.body.port_usage.should.have.property('sailing_vessels');
+              response.body.port_usage.should.have.property('aid_to_nav_vessels');
+              response.body.port_usage.should.have.property('port_id');
+              done();
+          });
+      });
+
+      it('should not add a new port if incorrect information is submitted', (done) => {
+        const mockObject = {
+            token,
+            port_name: 'Osaka',
+            port_locode: 'JPOSA',
+            max_vessel_size: 'unavailable',
+            port_total_ships: 745,
+            port_country: 'Japan'
+        }
+
+        chai.request(server)
+          .post('/api/v1/ports')
+          .send(mockObject)
+          .end( (error, response) => {
+            response.should.have.status(422);
+            response.should.be.json;
+            response.body.error.should.equal('Expected format: { port_name: <String>, port_locode: <String>, port_max_vessel_size: <String>, port_total_ships: <Integer>, port_country: <String>, port_usage: <Object> }. You\'re missing a port_max_vessel_size property.');
+
+            chai.request(server)
+              .get('/api/v1/ports')
+              .set('Authorization', token)
+              .end( (error, response) => {
+                response.should.have.status(200);
+                response.body.should.be.a('array');
+                response.body.length.should.equal(3);
+                done();
+              });
+          });
+      });
+
+      it('should not add a new port if missing information', (done) => {
+        const mockObject = {
+            token,
+            port_name: 'Osaka',
+            port_locode: 'JPOSA',
+            port_usage: {
+              cargo_vessels: '63.93%',
+              fishing_vessels: '0.2%',
+              various_vessels: '5.81%',
+              sailing_vessels: '1.2%',
+              aid_to_nav_vessels: '0%'
+            },
+            port_max_vessel_size: 'unavailable',
+            port_total_ships: 745,
+            port_country: 'Japan'
+        }
+
+        chai.request(server)
+          .post('/api/v1/ports')
+          .send(mockObject)
+          .end( (error, response) => {
+            response.should.have.status(422);
+            response.should.be.json;
+            response.body.error.should.equal('Expected format: port_usage: { cargo_vessels: <String>, fishing_vessels: <String>, various_vessels: <String>, tanker_vessels: <String>, tug_offshore_supply_vessels: <String>, passenger_vessels: <String>, authority_military_vessels: <String>, sailing_vessels: <String>, aid_to_nav_vessels: <String> }. You\'re missing a tanker_vessels property.');
+
+            chai.request(server)
+              .get('/api/v1/ports')
+              .set('Authorization', token)
+              .end( (error, response) => {
+                response.should.have.status(200);
+                response.body.should.be.a('array');
+                response.body.length.should.equal(3);
+                done();
+              });
           });
       });
     });
