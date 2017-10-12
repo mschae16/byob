@@ -15,7 +15,8 @@
         },
         "max_vessel_size": "150m",
         "total_ships_at_port": "118",
-        "country": "Russia"
+        "country": "Russia",
+        "id": "10"
     },
     {
         "port_name": "Shekou (Shenzhen)",
@@ -33,7 +34,8 @@
         },
         "max_vessel_size": "unavailable",
         "total_ships_at_port": "721",
-        "country": "China"
+        "country": "China",
+        "id": "20"
     },
     {
         "port_name": "Busan",
@@ -51,6 +53,7 @@
         },
         "max_vessel_size": "unavailable",
         "total_ships_at_port": "521",
-        "country": "South Korea"
+        "country": "South Korea",
+        "id": "30"
     }
 ]

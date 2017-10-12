@@ -1,5 +1,6 @@
 [
     {
+        "id": "1",
         "current_status": "moored",
         "imo_number": "8422175",
         "length": "81x16m",
@@ -10,6 +11,7 @@
         "type": "Supply vessel"
     },
     {
+        "id": "2",
         "current_status": "moored",
         "imo_number": "8878116",
         "length": "105x16m",
@@ -20,6 +22,7 @@
         "type": "Trawler"
     },
     {
+        "id": "3",
         "current_status": "–––",
         "imo_number": "–––",
         "length": "49x16m",
@@ -30,6 +33,7 @@
         "type": "Cargo ship"
     },
     {
+        "id": "4",
         "current_status": "at anchor",
         "imo_number": "–––",
         "length": "52x10m",
@@ -40,26 +44,29 @@
         "type": "Tanker"
     },
     {
+        "id": "5",
         "current_status": "underway using engine",
         "imo_number": "9450210",
         "length": "91x18m",
         "mmsi_callsign": "565603000\n9VNX2",
-        "port": "Singapore",
+        "port": "Busan",
         "ship_country": "Singapore",
         "ship_name": "KIMTEK 1",
         "type": "Oil tanker"
     },
     {
+        "id": "6",
         "current_status": "moored",
         "imo_number": "9250957",
         "length": "147x25m",
         "mmsi_callsign": "563984000\n9V9257",
-        "port": "Singapore",
+        "port": "Busan",
         "ship_country": "Singapore",
         "ship_name": "SINAR BINTAN",
         "type": "Container ship"
     },
     {
+        "id": "7",
         "current_status": "not available",
         "imo_number": "–––",
         "length": "30x8m",
@@ -70,6 +77,7 @@
         "type": "Tug"
     },
     {
+        "id": "8",
         "current_status": "underway using engine",
         "imo_number": "–––",
         "length": "58x9m",
@@ -80,21 +88,23 @@
         "type": "Tanker"
     },
     {
+        "id": "9",
         "current_status": "moored",
         "imo_number": "8106446",
         "length": "229x32m",
         "mmsi_callsign": "477926400\nVRCT6",
-        "port": "Hong Kong",
+        "port": "Shekou (Shenzhen)",
         "ship_country": "Hong Kong SAR of China",
         "ship_name": "ZHEN HUA 22",
         "type": "Heavy Lift Vessel"
     },
     {
+        "id": "10",
         "current_status": "moored",
         "imo_number": "9523794",
         "length": "100x18m",
         "mmsi_callsign": "370421000\n3FWA7",
-        "port": "Hong Kong",
+        "port": "Shekou (Shenzhen)",
         "ship_country": "Panama",
         "ship_name": "RUN XIANG",
         "type": "Liquefied gas carrier"

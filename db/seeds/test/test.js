@@ -16,7 +16,7 @@ const createPortUsage = (knex, usage, port_id) => {
   });
 };
 
-const createShip = (knex, ship, port_id, i) => {
+const createShip = (knex, ship, port_id) => {
 
   return knex('ships').insert({
     ship_name: ship.ship_name,
@@ -27,18 +27,18 @@ const createShip = (knex, ship, port_id, i) => {
     ship_status: ship.current_status,
     ship_mmsi_callsign: ship.mmsi_callsign,
     ship_current_port: port_id,
-    id: i
+    id: ship.id
   });
 };
 
-const createPort = (knex, port, i) => {
+const createPort = (knex, port) => {
   return knex('ports').insert({
     port_name: port.port_name,
     port_locode: port.port_locode,
     port_max_vessel_size: port.max_vessel_size,
     port_total_ships: port.total_ships_at_port,
     port_country: port.country,
-    id: i
+    id: port.id
   }, '*')
   .then( portObject => {
     const foundPort = ports.find(port => port.port_name === portObject[0].port_name);
@@ -47,9 +47,10 @@ const createPort = (knex, port, i) => {
     const shipPromises = [];
     const filteredShips = ships.filter( ship => ship.port === portObject[0].port_name);
 
-    filteredShips.forEach( (ship, i) => {
+    filteredShips.forEach( ship => {
+
       shipPromises.push(
-        createShip(knex, ship, portObject[0].id, i*10)
+        createShip(knex, ship, portObject[0].id)
       )
     });
 
@@ -65,8 +66,8 @@ exports.seed = (knex, Promise) => {
   .then(() => {
     let portPromises = [];
 
-      ports.forEach( (port, i) => {
-      portPromises.push(createPort(knex, port, i));
+      ports.forEach( port => {
+      portPromises.push(createPort(knex, port));
     })
     return Promise.all(portPromises)
   })
