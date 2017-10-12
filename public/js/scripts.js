@@ -16,6 +16,9 @@ const getToken = (e) => {
     .then( data => data.json())
     .then( response => showToken(response))
     .catch( error => console.log(error))
+
+    $('.email').val('');
+    $('.name').val('');
 }
 
 $('.submit').on('click', (e) => getToken(e))
