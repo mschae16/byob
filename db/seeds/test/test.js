@@ -61,7 +61,7 @@ const createPort = (knex, port) => {
 
 exports.seed = (knex, Promise) => {
   return knex('ships').del()
-  .then(() => knex('port_usage').del()
+  .then(() => knex('port_usage').del())
   .then(() => knex('ports').del()))
   .then(() => {
     let portPromises = [];
