@@ -98,7 +98,7 @@ app.get('/api/v1/port-usage', checkToken, (request, response) => {
     .catch( error => response.status(500).json({ error }))
 });
 
-app.get('/api/v1/ships', (request, response) => {
+app.get('/api/v1/ships', checkToken, (request, response) => {
   const { name, port } = request.query;
   let queryObject = {};
 
