@@ -61,14 +61,15 @@ const checkToken = (request, response, next) => {
 
 app.post('/api/v1/user/authenticate', (request, response) => {
   const { email, app_name } = request.body;
+  let user;
   if (!email || !app_name) {
     response.status(422).json({ error: 'You are missing a required parameter. Please include both email address and the name of your application.'});
   }
   const emailSuffix = email.split('@')[1];
   emailSuffix === 'turing.io' ?
-    const user = Object.assign({}, request.body, { admin: true })
+    user = Object.assign({}, request.body, { admin: true })
     :
-    const user = Object.assign({}, request.body, { admin: false })
+    user = Object.assign({}, request.body, { admin: false })
 
   const token = jwt.sign(user, app.get('secretKey'), { expiresIn: '48h' });
   response.status(201).json({ token });
@@ -98,9 +99,22 @@ app.get('/api/v1/port-usage', checkToken, (request, response) => {
 });
 
 app.get('/api/v1/ships', checkToken, (request, response) => {
-  database('ships').select()
-    .then( ships => response.status(200).json(ships))
-    .catch( error => response.status(500).json({ error }))
+  const { name, port } = request.query;
+  let queryObject = {};
+
+  if (Object.keys(request.query).length) {
+    if (name) {
+      const alteredName = name.split('_').join(' ');
+      queryObject = Object.assign({}, { ship_name: alteredName.toUpperCase() });
+    }
+    if (port) {
+      queryObject = Object.assign({}, queryObject, { ship_current_port: port });
+    }
+  }
+
+  database('ships').where(queryObject).select()
+  .then( ships => response.status(200).json(ships))
+  .catch( error => response.status(500).json({ error }))
 });
 
 app.get('/api/v1/ports/:id', checkToken, (request, response) => {
