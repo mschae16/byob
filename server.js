@@ -166,7 +166,7 @@ app.post('/api/v1/ports', checkAuth, (request, response) => {
       if (!portObject[requiredParameter]) {
         return response
           .status(422)
-          .send({ error: `Expected format: { port_name: <String>, port_locode: <String>, port_max_vessel_size: <String>, port_total_ships: <String>, port_country: <String>, port_usage: <Object> }. You're missing a ${requiredParameter} property.` });
+          .send({ error: `Expected format: { port_name: <String>, port_locode: <String>, port_max_vessel_size: <String>, port_total_ships: <Integer>, port_country: <String>, port_usage: <Object> }. You're missing a ${requiredParameter} property.` });
       }
     };
 
