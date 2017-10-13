@@ -5,11 +5,11 @@ node_modules/
 *.DS_store
 
 # Data files
-ships.json
-ports.json
+*ships.json
+*ports.json
 
 # Secret key
-key.js
+*key.js
 
 # Test token
-token.js
+*token.js
