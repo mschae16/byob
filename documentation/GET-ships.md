@@ -58,7 +58,7 @@ This endpoint will throw a 404 and a 500 error
 
 ``` 
 [
-	{
+    {
         "id": "3",
         "current_status": "–––",
         "imo_number": "–––",
