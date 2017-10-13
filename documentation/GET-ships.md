@@ -17,7 +17,7 @@ This endpoint will accept a Jason Web Token query parameter in the url
 
     /api/v1/ships?token=(jwt goes here)
     
-- **id** - The id parameter will select the specific vessel from the database where the ship's id matches the given parameter
+**id** - The id parameter will select the specific vessel from the database where the ship's id matches the given parameter
 
     /api/v1/ships/:id
 
@@ -44,7 +44,7 @@ This endpoint will throw a 404 and a 500 error
 
 ```
 { 
-error: 'Error message will be here.'
+    error: 'Error message will be here.'
 }
 ```
 

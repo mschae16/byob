@@ -42,7 +42,7 @@ This endpoint will throw a 404 and a 500 error
 
 ```
 { 
-error: 'Error message will be here.'
+    error: 'Error message will be here.'
 }
 ```
 
