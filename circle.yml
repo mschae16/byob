@@ -2,7 +2,7 @@ general:
   branches:
     only:
       - master
-      
+
 machine:
   timezone:
     America/Denver
@@ -13,8 +13,19 @@ machine:
   environment:
     DATABASE_URL: postgresql://ubuntu:@127.0.0.1:5432/circle_test
 
-  deployment:
-    production:
-      branch: master
-      heroku:
-        appname: byob-jargo
+test:
+  pre:
+    - eslint server.js
+    - eslint public/js/scripts.js
+    - eslint knexfile.js
+    - eslint test/jwt.spec.js
+    - eslint test/ports.spec.js
+    - eslint test/routes.spec.js
+    - eslint test/ships.spec.js
+    - eslint test/usage.spec.js
+
+deployment:
+  production:
+    branch: master
+    heroku:
+      appname: byob-jargo
