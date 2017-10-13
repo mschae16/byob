@@ -1,15 +1,11 @@
 const chai = require('chai');
-const should = chai.should();
 const chaiHttp = require('chai-http');
 const server = require('../server');
-const jwt = require('jsonwebtoken');
+const should = chai.should();
 
 const environment = process.env.NODE_ENV || 'test';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
-
-const localKey = process.env.SECRET_KEY || require('../key.js');
-const token = jwt.sign({ email: 'test@turing.io', appName: 'Jargo', admin: true }, localKey);
 
 chai.use(chaiHttp);
 

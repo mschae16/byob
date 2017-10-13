@@ -1,8 +1,8 @@
 const chai = require('chai');
-const should = chai.should();
 const chaiHttp = require('chai-http');
 const server = require('../server');
 const jwt = require('jsonwebtoken');
+const should = chai.should();
 
 const environment = process.env.NODE_ENV || 'test';
 const configuration = require('../knexfile')[environment];
