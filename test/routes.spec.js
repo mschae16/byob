@@ -260,7 +260,7 @@ describe('API Routes', () => {
         port_max_vessel_size: 'unavailable',
         port_total_ships: 745,
         port_country: 'Japan'
-      }
+      };
 
       chai.request(server)
         .post('/api/v1/ports')
@@ -308,7 +308,7 @@ describe('API Routes', () => {
         max_vessel_size: 'unavailable',
         port_total_ships: 745,
         port_country: 'Japan'
-      }
+      };
 
       chai.request(server)
         .post('/api/v1/ports')
@@ -345,7 +345,7 @@ describe('API Routes', () => {
         port_max_vessel_size: 'unavailable',
         port_total_ships: 745,
         port_country: 'Japan'
-      }
+      };
 
       chai.request(server)
         .post('/api/v1/ports')
@@ -381,7 +381,8 @@ describe('API Routes', () => {
         ship_country: 'Russia',
         ship_name: 'JARGO',
         ship_type: 'Trawler'
-      }
+      };
+
       chai.request(server)
         .post('/api/v1/ships')
         .send(mockObject)
@@ -390,7 +391,7 @@ describe('API Routes', () => {
           response.should.have.status(201);
           response.should.be.json;
           response.body.should.be.a('array');
-          response.body.length.should.equal(1)
+          response.body.length.should.equal(1);
           response.body[0].should.have.property('id');
           response.body[0].should.have.property('ship_status');
           response.body[0].should.have.property('ship_imo');
@@ -424,7 +425,7 @@ describe('API Routes', () => {
         ship_country: 'Russia',
         ship_name: 'JARGO',
         ship_type: 'Trawler'
-      }
+      };
 
       chai.request(server)
         .post('/api/v1/ships')
@@ -506,7 +507,7 @@ describe('API Routes', () => {
             })
             .end((error, response) => {
               response.should.have.status(422);
-              response.body.error.should.equal("Expected format: { port_max_vessel_size: <String>, port_total_ships: <Integer>.");
+              response.body.error.should.equal('Expected format: { port_max_vessel_size: <String>, port_total_ships: <Integer>.');
 
               chai.request(server)
                 .get('/api/v1/ports/10')
@@ -527,7 +528,7 @@ describe('API Routes', () => {
     it('Should update the ships database with a patch request', (done) => {
       const mockObject = {
         ship_status: 'underway using engine'
-      }
+      };
 
       chai.request(server)
         .get('/api/v1/ships/1')
@@ -536,7 +537,7 @@ describe('API Routes', () => {
           response.should.have.status(200);
           response.should.be.json;
           response.body[0].should.have.property('ship_status');
-          response.body[0].ship_status.should.equal('moored')
+          response.body[0].ship_status.should.equal('moored');
 
           chai.request(server)
             .patch('/api/v1/ships/1')
@@ -558,7 +559,7 @@ describe('API Routes', () => {
     it('Should not update the ships database when trying to update a parameter that can\'t be changed', (done) => {
       const mockObject = {
         ship_name: 'Boaty McBoatface'
-      }
+      };
 
       chai.request(server)
         .get('/api/v1/ships/1')
@@ -576,7 +577,7 @@ describe('API Routes', () => {
             .end((error, response) => {
               response.should.have.status(422);
               response.should.be.json;
-              response.body.error.should.equal("Expected format: { ship_country: <String>, ship_type: <String>, ship_status: <String>, <String>, ship_current_port: <Integer> }. You're missing a valid property.");
+              response.body.error.should.equal('Expected format: { ship_country: <String>, ship_type: <String>, ship_status: <String>, <String>, ship_current_port: <Integer> }. You\'re missing a valid property.');
 
               chai.request(server)
                 .get('/api/v1/ships/1')
@@ -605,7 +606,7 @@ describe('API Routes', () => {
         authority_military_vessels: '10%',
         sailing_vessels: '10%',
         aid_to_nav_vessels: '10%'
-      }
+      };
 
       chai.request(server)
         .put('/api/v1/port-usage/20')
@@ -664,7 +665,7 @@ describe('API Routes', () => {
         authority_military_vessels: '10%',
         sailing_vessels: '10%',
         aid_to_nav_vessels: '10%'
-      }
+      };
 
       chai.request(server)
         .put('/api/v1/port-usage/20')
