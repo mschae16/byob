@@ -20,7 +20,7 @@ exports.up = (knex, Promise) => {
       table.string('sailing_vessels');
       table.string('aid_to_nav_vessels');
       table.integer('port_id').unsigned();
-      table.foreign('port_id').references('ports.id');
+      table.foreign('port_id').references('ports.id').onDelete('CASCADE');
       table.timestamps(true, true);
     }),
     knex.schema.createTable('ships', (table) => {
@@ -33,7 +33,7 @@ exports.up = (knex, Promise) => {
       table.string('ship_status');
       table.string('ship_mmsi_callsign');
       table.integer('ship_current_port').unsigned();
-      table.foreign('ship_current_port').references('ports.id');
+      table.foreign('ship_current_port').references('ports.id').onDelete('CASCADE');
       table.timestamps(true, true);
     })
   ]);
