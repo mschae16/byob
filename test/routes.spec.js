@@ -486,9 +486,6 @@ describe('API Routes', () => {
       });
 
       it('Should not update the port database when trying to update a parameter that can\'t be changed', (done) => {
-        const mockObject = {
-          port_locode: 'RUCCO'
-        }
 
         chai.request(server)
           .get('/api/v1/ports/10')
@@ -496,16 +493,15 @@ describe('API Routes', () => {
           .end( (error, response) => {
             response.should.have.status(200);
             response.should.be.json;
-            response.body[0].should.have.property('port_locode');
-            response.body[0].port_locode.should.equal('RUVVO');       
+            response.body[0].should.have.property('port_country');
+            response.body[0].port_country.should.equal('Russia');       
 
           chai.request(server)
-            .post('/api/v1/ports/10')
+            .patch('/api/v1/ports/10')
             .set('Authorization', token)
-            .send(mockObject)
+            .send({ country: 'USA' })
             .end( (error, response) => {
-                response.should.have.status(404);
-                response.should.be.json;
+                response.should.have.status(422);
                 response.body.error.should.equal("Expected format: { port_max_vessel_size: <String>, port_total_ships: <Integer>.");   
 
             chai.request(server)
@@ -514,8 +510,8 @@ describe('API Routes', () => {
               .end( (error, response) => {
                 response.should.have.status(200);
                 response.should.be.json;
-                response.body[0].should.have.property('port_locode');
-                response.body[0].port_locode.should.equal('RUVVO');
+                response.body[0].should.have.property('port_country');
+                response.body[0].port_country.should.equal('Russia');
                 done();   
               });
             });
@@ -570,7 +566,7 @@ describe('API Routes', () => {
             response.body[0].ship_name.should.equal('IRBIS');    
 
           chai.request(server)
-            .post('/api/v1/ships/1')
+            .patch('/api/v1/ships/1')
             .set('Authorization', token)
             .send(mockObject)
             .end( (error, response) => {
@@ -584,7 +580,7 @@ describe('API Routes', () => {
               .end( (error, response) => {
                 response.should.have.status(200);
                 response.should.be.json;
-                response.body.should.have.property('ship_name');
+                response.body[0].should.have.property('ship_name');
                 response.body[0].ship_name.should.equal('IRBIS');
                 done();         
               });
@@ -620,7 +616,7 @@ describe('API Routes', () => {
             done();
           });
         });
-      });
+    });
 
     describe('DELETE /api/v1/ships/:id', () => {
       it('should delete a ship from database', (done) => {
