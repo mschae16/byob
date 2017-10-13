@@ -9,7 +9,6 @@ const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
 
 const localKey = process.env.SECRET_KEY || require('../key.js');
-
 const token = jwt.sign({ email: 'test@turing.io', appName: 'Jargo', admin: true }, localKey);
 
 chai.use(chaiHttp);
@@ -81,6 +80,5 @@ describe('API Routes', () => {
         });
     });
   });
-
 
 });
