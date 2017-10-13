@@ -230,7 +230,7 @@ describe('JWT middleware', () => {
         .get('/api/v1/ports/20')
         .end( (error, response) => {
           response.should.have.status(403);
-          response.body.error.should.equal('You must be authorized to hit this endpoint.')
+          response.body.error.should.equal('You must be authorized to hit this endpoint.');
           done();
         });
     });
@@ -280,7 +280,7 @@ describe('JWT middleware', () => {
         .get('/api/v1/ships/7')
         .end( (error, response) => {
           response.should.have.status(403);
-          response.body.error.should.equal('You must be authorized to hit this endpoint.')
+          response.body.error.should.equal('You must be authorized to hit this endpoint.');
           done();
         });
     });
@@ -288,22 +288,22 @@ describe('JWT middleware', () => {
 
   describe('Post new port with jwt', () => {
     const mockData = {
-        port_name: 'Osaka',
-        port_locode: 'JPOSA',
-        port_usage: {
-          cargo_vessels: '63.93%',
-          fishing_vessels: '0.2%',
-          various_vessels: '5.81%',
-          tanker_vessels: '17.64%',
-          tug_offshore_supply_vessels: '9.62%',
-          passenger_vessels: '0.8%',
-          authority_military_vessels: '0.8%',
-          sailing_vessels: '1.2%',
-          aid_to_nav_vessels: '0%'
-        },
-        port_max_vessel_size: 'unavailable',
-        port_total_ships: 745,
-        port_country: 'Japan'
+      port_name: 'Osaka',
+      port_locode: 'JPOSA',
+      port_usage: {
+        cargo_vessels: '63.93%',
+        fishing_vessels: '0.2%',
+        various_vessels: '5.81%',
+        tanker_vessels: '17.64%',
+        tug_offshore_supply_vessels: '9.62%',
+        passenger_vessels: '0.8%',
+        authority_military_vessels: '0.8%',
+        sailing_vessels: '1.2%',
+        aid_to_nav_vessels: '0%'
+      },
+      port_max_vessel_size: 'unavailable',
+      port_total_ships: 745,
+      port_country: 'Japan'
     };
 
     it('POST port - jwt passed in query params', (done) => {
@@ -343,7 +343,7 @@ describe('JWT middleware', () => {
         .send(mockData)
         .end( (error, response) => {
           response.should.have.status(403);
-          response.body.error.should.equal('You must be authorized to hit this endpoint.')
+          response.body.error.should.equal('You must be authorized to hit this endpoint.');
           done();
         });
     });
@@ -371,7 +371,7 @@ describe('JWT middleware', () => {
       ship_country: 'Russia',
       ship_name: 'JARGO',
       ship_type: 'Trawler'
-    }
+    };
 
     it('POST ship - jwt passed in query params', (done) => {
       chai.request(server)
@@ -410,7 +410,7 @@ describe('JWT middleware', () => {
         .send(mockShip)
         .end( (error, response) => {
           response.should.have.status(403);
-          response.body.error.should.equal('You must be authorized to hit this endpoint.')
+          response.body.error.should.equal('You must be authorized to hit this endpoint.');
           done();
         });
     });
@@ -422,64 +422,63 @@ describe('JWT middleware', () => {
         .send(mockShip)
         .end( (error, response) => {
           response.should.have.status(403);
-          response.body.error.should.equal('You are not authorized to have write access to this endpoint.')
+          response.body.error.should.equal('You are not authorized to have write access to this endpoint.');
           done();
         });
     });
   });
 
-  // do last
-  // describe('Delete a port with jwt', () => {
-  //   it('DELETE port - jwt passed in query params', (done) => {
-  //     chai.request(server)
-  //       .delete(`/api/v1/ports/10?token=${adminToken}`)
-  //       .end( (error, response) => {
-  //         response.should.have.status(204);
-  //         done();
-  //       });
-  //   });
-  //
-  //   it('DELETE port - jwt passed in request body', (done) => {
-  //     chai.request(server)
-  //       .delete('/api/v1/ports/10')
-  //       .send({ token: adminToken })
-  //       .end( (error, response) => {
-  //         response.should.have.status(204);
-  //         done();
-  //       });
-  //   });
-  //
-  //   it('DELETE port - jwt passed in headers', (done) => {
-  //     chai.request(server)
-  //       .delete('/api/v1/ports/10')
-  //       .set('Authorization', adminToken)
-  //       .end( (error, response) => {
-  //         response.should.have.status(204);
-  //         done();
-  //       });
-  //   });
-  //
-  //   it('returns error if missing jwt', (done) => {
-  //     chai.request(server)
-  //       .delete('/api/v1/ports/10')
-  //       .end( (error, response) => {
-  //         response.should.have.status(403);
-  //         response.body.error.should.equal('You must be authorized to hit this endpoint.');
-  //         done();
-  //       });
-  //   });
-  //
-  //   it('returns error if missing admin privileges', (done) => {
-  //     chai.request(server)
-  //       .delete('/api/v1/ports/10')
-  //       .set('Authorization', userToken)
-  //       .end( (error, response) => {
-  //         response.should.have.status(403);
-  //         response.body.error.should.equal('You are not authorized to have write access to this endpoint.');
-  //         done();
-  //       });
-  //   });
-  // });
+  describe('Delete a port with jwt', () => {
+    it.skip('DELETE port - jwt passed in query params', (done) => {
+      chai.request(server)
+        .delete(`/api/v1/ports/10?token=${adminToken}`)
+        .end( (error, response) => {
+          response.should.have.status(204);
+          done();
+        });
+    });
+
+    it.skip('DELETE port - jwt passed in request body', (done) => {
+      chai.request(server)
+        .delete('/api/v1/ports/10')
+        .send({ token: adminToken })
+        .end( (error, response) => {
+          response.should.have.status(204);
+          done();
+        });
+    });
+
+    it.skip('DELETE port - jwt passed in headers', (done) => {
+      chai.request(server)
+        .delete('/api/v1/ports/10')
+        .set('Authorization', adminToken)
+        .end( (error, response) => {
+          response.should.have.status(204);
+          done();
+        });
+    });
+
+    it('returns error if missing jwt', (done) => {
+      chai.request(server)
+        .delete('/api/v1/ports/10')
+        .end( (error, response) => {
+          response.should.have.status(403);
+          response.body.error.should.equal('You must be authorized to hit this endpoint.');
+          done();
+        });
+    });
+
+    it('returns error if missing admin privileges', (done) => {
+      chai.request(server)
+        .delete('/api/v1/ports/10')
+        .set('Authorization', userToken)
+        .end( (error, response) => {
+          response.should.have.status(403);
+          response.body.error.should.equal('You are not authorized to have write access to this endpoint.');
+          done();
+        });
+    });
+  });
 
   describe('Delete single ship with jwt', () => {
     it('DELETE ship - jwt passed in query params', (done) => {
@@ -534,9 +533,7 @@ describe('JWT middleware', () => {
   });
 
   describe('Patch single port with jwt', () => {
-    const patchData = {
-        port_total_ships: 232
-    }
+    const patchData = { port_total_ships: 232 };
 
     it('PATCH port - jwt passed in query params', (done) => {
       chai.request(server)
@@ -574,7 +571,7 @@ describe('JWT middleware', () => {
         .patch('/api/v1/ports/10')
         .send(patchData)
         .end( (error, response) => {
-          response.should.have.status(403)
+          response.should.have.status(403);
           response.body.error.should.equal('You must be authorized to hit this endpoint.');
           done();
         });
@@ -586,17 +583,15 @@ describe('JWT middleware', () => {
         .set('Authorization', userToken)
         .send(patchData)
         .end( (error, response) => {
-          response.should.have.status(403)
-          response.body.error.should.equal('You are not authorized to have write access to this endpoint.')
+          response.should.have.status(403);
+          response.body.error.should.equal('You are not authorized to have write access to this endpoint.');
           done();
         });
     });
   });
 
   describe('Patch single ship with jwt', () => {
-    const patchShip = {
-      ship_status: 'underway using engine'
-    }
+    const patchShip = { ship_status: 'underway using engine' };
 
     it('PATCH ship - jwt passed in query params', (done) => {
       chai.request(server)
@@ -634,7 +629,7 @@ describe('JWT middleware', () => {
         .patch('/api/v1/ships/4')
         .send(patchShip)
         .end( (error, response) => {
-          response.should.have.status(403)
+          response.should.have.status(403);
           response.body.error.should.equal('You must be authorized to hit this endpoint.');
           done();
         });
@@ -646,8 +641,8 @@ describe('JWT middleware', () => {
         .set('Authorization', userToken)
         .send(patchShip)
         .end( (error, response) => {
-          response.should.have.status(403)
-          response.body.error.should.equal('You are not authorized to have write access to this endpoint.')
+          response.should.have.status(403);
+          response.body.error.should.equal('You are not authorized to have write access to this endpoint.');
           done();
         });
     });
@@ -664,7 +659,7 @@ describe('JWT middleware', () => {
       authority_military_vessels: '10%',
       sailing_vessels: '10%',
       aid_to_nav_vessels: '10%'
-    }
+    };
 
     it('PUT port-usage - jwt passed in query params', (done) => {
       chai.request(server)
@@ -702,7 +697,7 @@ describe('JWT middleware', () => {
         .put('/api/v1/port-usage/10')
         .send(putData)
         .end( (error, response) => {
-          response.should.have.status(403)
+          response.should.have.status(403);
           response.body.error.should.equal('You must be authorized to hit this endpoint.');
           done();
         });
@@ -714,8 +709,8 @@ describe('JWT middleware', () => {
         .set('Authorization', userToken)
         .send(putData)
         .end( (error, response) => {
-          response.should.have.status(403)
-          response.body.error.should.equal('You are not authorized to have write access to this endpoint.')
+          response.should.have.status(403);
+          response.body.error.should.equal('You are not authorized to have write access to this endpoint.');
           done();
         });
     });

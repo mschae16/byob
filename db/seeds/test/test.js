@@ -56,7 +56,9 @@ const createPort = (knex, port) => {
 
       return Promise.all([portPromise, ...shipPromises]);
     })
-    .catch(error => console.error('Error seeding data', error))
+  /* eslint-disable no-alert, no-console */
+    .catch(error => console.error('Error seeding data', error));
+  /* eslint-enable no-alert, no-console */
 };
 
 exports.seed = (knex, Promise) => {
@@ -71,5 +73,7 @@ exports.seed = (knex, Promise) => {
       });
       return Promise.all(portPromises);
     })
-    .catch(error => console.error('Error seeding data', error))
+  /* eslint-disable no-alert, no-console */
+    .catch(error => console.error('Error seeding data', error));
+  /* eslint-enable no-alert, no-console */
 };
