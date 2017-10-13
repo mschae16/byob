@@ -3,23 +3,32 @@ const chaiHttp = require('chai-http');
 const server = require('../server');
 const jwt = require('jsonwebtoken');
 const should = chai.should();
+require('dotenv').config();
 
 const environment = process.env.NODE_ENV || 'test';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
 
-const localKey = process.env.SECRET_KEY || require('../key.js');
-const adminToken = jwt.sign({ email: 'test@turing.io', appName: 'Jargo', admin: true }, localKey);
-const userToken = jwt.sign({ email: 'test@gmail.com', appName: 'Jargo', admin: false }, localKey);
+const adminToken = jwt.sign({ email: 'test@turing.io', app_name: 'Jargo', admin: true }, process.env.SECRET_KEY);
+const userToken = jwt.sign({ email: 'test@gmail.com', app_name: 'Jargo', admin: false }, process.env.SECRET_KEY);
 
 chai.use(chaiHttp);
 
 describe('JWT middleware', () => {
+  // let adminToken;
 
   before((done) => {
     database.migrate.latest()
       .then(() => done())
+    /* eslint-disable no-alert, no-console */
       .catch((error) => console.log(error));
+    /* eslint-enable no-alert, no-console */
+    // chai.request(server)
+    //   .post('/api/v1/user/authenticate')
+    //   .send({ email: 'test@turing.io', app_name: 'Jargo' })
+    //   .end( (error, response) => {
+    //     adminToken = JSON.parse(response.text).token;
+    //   });
   });
 
   beforeEach((done) => {

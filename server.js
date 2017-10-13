@@ -3,11 +3,11 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const app = express();
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const environment = process.env.NODE_ENV || 'development';
 const configuration = require('./knexfile')[environment];
 const database = require('knex')(configuration);
-const localKey = process.env.SECRET_KEY || require('./key.js');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.set('port', process.env.PORT || 3000);
-app.set('secretKey', process.env.SECRET_KEY || localKey);
+app.set('secretKey', process.env.SECRET_KEY);
 app.locals.title = 'BYOB';
 
 app.listen(app.get('port'), () => {
@@ -77,7 +77,7 @@ app.post('/api/v1/user/authenticate', (request, response) => {
     });
   }
   const emailSuffix = email.split('@')[1];
-  
+
   if (emailSuffix === 'turing.io') {
     user = Object.assign({}, request.body, { admin: true });
   } else {
