@@ -26,8 +26,8 @@ Will return a status code of 201, along with a JSON object of the posted informa
 - **port_locode** - The United Nations Code for Trade and Transport Locations
 - **port_usage** - An object returned from another database that displays the types of vessels using this port in percentages.  See this [documentation]() for more information.
 - **port_max_vessel_size** - If there is a limit to the vessel size the port can contain, it is found here in meters.
-- **port_total_ships** - The total number of ships currently at the port
-- **port_country** - The country the port is located in
+- **port_total_ships** - The total number of ships currently at the port.
+- **port_country** - The country the port is located in.
 ***
 
 ## Errors

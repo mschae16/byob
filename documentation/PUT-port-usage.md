@@ -4,12 +4,11 @@
 
 ## Description
 Update all percentages of vessels in a specific port
-Returns all percentages of vessels in all ports from the database.
 
 ***
 
 ## Requires authentication
-This endpoint requires the user to submit their email and app name in order to retrieve from the database.  This will create a JSON Web Token that will be used to authenticate the user.
+This endpoint requires the user to have submitted their email and app name.  In order to put to the database, the user must have an email issued by Turing School of Software and Design ending in `@turing.io`.  This will create a JSON Web Token with administrative access that will be used to authenticate the user.
 
 ***
 

@@ -325,8 +325,7 @@ app.patch('/api/v1/ports/:id', checkAuth, (request, response) => {
 
   if (!port_max_vessel_size && !port_total_ships) {
     return response.status(422).send({
-      error: 'Expected format: { port_max_vessel_size: <String>, port_total_ships: <Integer>.'
-    });
+      error: 'Expected format: { port_max_vessel_size: <String>, port_total_ships: <Integer>. }' });
   }
 
   database('ports').where({ id })
@@ -335,9 +334,7 @@ app.patch('/api/v1/ports/:id', checkAuth, (request, response) => {
       port_total_ships
     }, '*')
     .then(update => response.status(200).json(update))
-    .catch(error => response.status(500).json({
-      error
-    }));
+    .catch(error => response.status(500).json({ error }));
 });
 
 app.put('/api/v1/port-usage/:id', checkAuth, (request, response) => {
@@ -367,9 +364,7 @@ app.put('/api/v1/port-usage/:id', checkAuth, (request, response) => {
     if (!request.body[requiredParameter]) {
       return response
         .status(422)
-        .send({
-          error: `Expected format: { cargo_vessels: <String>, fishing_vessels: <String>, various_vessels: <String>, tanker_vessels: <String>, tug_offshore_supply_vessels: <String>, passenger_vessels: <String>, authority_military_vessels: <String>, sailing_vessels: <String>, aid_to_nav_vessels: <String> }. You're missing a ${requiredParameter} property.`
-        });
+        .send({ error: `Expected format: { cargo_vessels: <String>, fishing_vessels: <String>, various_vessels: <String>, tanker_vessels: <String>, tug_offshore_supply_vessels: <String>, passenger_vessels: <String>, authority_military_vessels: <String>, sailing_vessels: <String>, aid_to_nav_vessels: <String> }. You're missing a ${requiredParameter} property.` });
     }
   }
 
