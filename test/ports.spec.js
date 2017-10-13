@@ -152,8 +152,7 @@ describe('Port Routes', () => {
           response.body.port_usage.should.have.property('port_id');
 
           chai.request(server)
-            .get('/api/v1/ports')
-            .set('Authorization', token)
+            .get(`/api/v1/ports?token=${token}`)
             .end( (error, response) => {
               response.should.have.status(200);
               response.body.should.be.a('array');
@@ -182,8 +181,7 @@ describe('Port Routes', () => {
           response.body.error.should.equal('Expected format: { port_name: <String>, port_locode: <String>, port_max_vessel_size: <String>, port_total_ships: <Integer>, port_country: <String>, port_usage: <Object> }. You\'re missing a port_max_vessel_size property.');
 
           chai.request(server)
-            .get('/api/v1/ports')
-            .set('Authorization', token)
+            .get(`/api/v1/ports?token=${token}`)
             .end( (error, response) => {
               response.should.have.status(200);
               response.body.should.be.a('array');
@@ -219,8 +217,7 @@ describe('Port Routes', () => {
           response.body.error.should.equal('Expected format: port_usage: { cargo_vessels: <String>, fishing_vessels: <String>, various_vessels: <String>, tanker_vessels: <String>, tug_offshore_supply_vessels: <String>, passenger_vessels: <String>, authority_military_vessels: <String>, sailing_vessels: <String>, aid_to_nav_vessels: <String> }. You\'re missing a tanker_vessels property.');
 
           chai.request(server)
-            .get('/api/v1/ports')
-            .set('Authorization', token)
+            .get(`/api/v1/ports?token=${token}`)
             .end( (error, response) => {
               response.should.have.status(200);
               response.body.should.be.a('array');
@@ -234,8 +231,7 @@ describe('Port Routes', () => {
   describe('PATCH /api/v1/ports/:id', () => {
     it('Should update the ports database with a patch request', (done) => {
       chai.request(server)
-        .get('/api/v1/ports/10')
-        .set('Authorization', token)
+        .get(`/api/v1/ports/10?token=${token}`)
         .end( (error, response) => {
           response.should.have.status(200);
           response.should.be.json;
@@ -243,8 +239,7 @@ describe('Port Routes', () => {
           response.body[0].port_total_ships.should.equal(118);
 
           chai.request(server)
-            .patch('/api/v1/ports/10')
-            .set('Authorization', token)
+            .patch(`/api/v1/ports/10?token=${token}`)
             .send({ port_total_ships: 232 })
             .end( (error, response) => {
               response.should.have.status(200);
@@ -256,8 +251,7 @@ describe('Port Routes', () => {
               response.body[0].port_total_ships.should.equal(232);
 
               chai.request(server)
-                .get('/api/v1/ports/10')
-                .set('Authorization', token)
+                .get(`/api/v1/ports/10?token=${token}`)
                 .end( (error, response) => {
                   response.should.have.status(200);
                   response.body.should.be.a('array');
@@ -270,8 +264,7 @@ describe('Port Routes', () => {
 
     it('Should not update the port database when trying to update a parameter that cannot be changed', (done) => {
       chai.request(server)
-        .get('/api/v1/ports/10')
-        .set('Authorization', token)
+        .get(`/api/v1/ports/10?token=${token}`)
         .end( (error, response) => {
           response.should.have.status(200);
           response.should.be.json;
@@ -279,16 +272,14 @@ describe('Port Routes', () => {
           response.body[0].port_country.should.equal('Russia');
 
           chai.request(server)
-            .patch('/api/v1/ports/10')
-            .set('Authorization', token)
+            .patch(`/api/v1/ports/10?token=${token}`)
             .send({ country: 'USA' })
             .end( (error, response) => {
               response.should.have.status(422);
               response.body.error.should.equal('Expected format: { port_max_vessel_size: <String>, port_total_ships: <Integer>. }');
 
               chai.request(server)
-                .get('/api/v1/ports/10')
-                .set('Authorization', token)
+                .get(`/api/v1/ports/10?token=${token}`)
                 .end( (error, response) => {
                   response.should.have.status(200);
                   response.should.be.json;
@@ -304,8 +295,7 @@ describe('Port Routes', () => {
   describe('DELETE /api/v1/ports/:id', () => {
     it.skip('should delete a port from database', (done) => {
       chai.request(server)
-        .delete('/api/v1/ports/20')
-        .set('Authorization', token)
+        .delete(`/api/v1/ports/20?token=${token}`)
         .end( (error, response) => {
           response.should.have.status(204);
 
@@ -318,8 +308,7 @@ describe('Port Routes', () => {
               response.body.length.should.equal(2);
 
               chai.request(server)
-                .get('/api/v1/port-usage')
-                .set('Authorization', token)
+                .get(`/api/v1/port-usage?token=${token}`)
                 .end( (error, response) => {
                   response.should.have.status(200);
                   response.body.should.be.a('array');
