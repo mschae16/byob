@@ -20,7 +20,9 @@ app.set('secretKey', process.env.SECRET_KEY);
 app.locals.title = 'BYOB';
 
 app.listen(app.get('port'), () => {
+  /* eslint-disable no-alert, no-console */
   console.log(`${app.locals.title} is running on ${app.get('port')}.`);
+  /* eslint-enable no-alert, no-console */
 });
 
 // AUTHENTICATION MIDDLEWARE

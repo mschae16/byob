@@ -2,14 +2,16 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../server');
 const jwt = require('jsonwebtoken');
+/* eslint-disable no-alert, no-unused-vars */
 const should = chai.should();
+/* eslint-enable no-alert, no-unused-vars */
+require('dotenv').config();
 
 const environment = process.env.NODE_ENV || 'test';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
 
-const localKey = process.env.SECRET_KEY || require('../key.js');
-const token = jwt.sign({ email: 'test@turing.io', appName: 'Jargo', admin: true }, localKey);
+const token = jwt.sign({ email: 'test@turing.io', app_name: 'Jargo', admin: true }, process.env.SECRET_KEY);
 
 chai.use(chaiHttp);
 
@@ -18,13 +20,17 @@ describe('Port Routes', () => {
   before((done) => {
     database.migrate.latest()
       .then(() => done())
+    /* eslint-disable no-alert, no-console */
       .catch((error) => console.log(error));
+    /* eslint-enable no-alert, no-console */
   });
 
   beforeEach((done) => {
     database.seed.run()
       .then(() => done())
+    /* eslint-disable no-alert, no-console */
       .catch((error) => console.log(error));
+    /* eslint-enable no-alert, no-console */
   });
 
   describe('GET /api/v1/ports', () => {

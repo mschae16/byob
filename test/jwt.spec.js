@@ -2,7 +2,9 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../server');
 const jwt = require('jsonwebtoken');
+/* eslint-disable no-alert, no-unused-vars */
 const should = chai.should();
+/* eslint-enable no-alert, no-unused-vars */
 require('dotenv').config();
 
 const environment = process.env.NODE_ENV || 'test';
@@ -15,7 +17,6 @@ const userToken = jwt.sign({ email: 'test@gmail.com', app_name: 'Jargo', admin: 
 chai.use(chaiHttp);
 
 describe('JWT middleware', () => {
-  // let adminToken;
 
   before((done) => {
     database.migrate.latest()
@@ -23,18 +24,14 @@ describe('JWT middleware', () => {
     /* eslint-disable no-alert, no-console */
       .catch((error) => console.log(error));
     /* eslint-enable no-alert, no-console */
-    // chai.request(server)
-    //   .post('/api/v1/user/authenticate')
-    //   .send({ email: 'test@turing.io', app_name: 'Jargo' })
-    //   .end( (error, response) => {
-    //     adminToken = JSON.parse(response.text).token;
-    //   });
   });
 
   beforeEach((done) => {
     database.seed.run()
       .then(() => done())
+    /* eslint-disable no-alert, no-console */
       .catch((error) => console.log(error));
+    /* eslint-enable no-alert, no-console */
   });
 
   describe('Retrieve ports with jwt', () => {

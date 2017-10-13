@@ -1,7 +1,9 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../server');
+/* eslint-disable no-alert, no-unused-vars */
 const should = chai.should();
+/* eslint-enable no-alert, no-unused-vars */
 
 const environment = process.env.NODE_ENV || 'test';
 const configuration = require('../knexfile')[environment];
@@ -37,13 +39,17 @@ describe('API Routes', () => {
   before((done) => {
     database.migrate.latest()
       .then(() => done())
+    /* eslint-disable no-alert, no-console */
       .catch((error) => console.log(error));
+    /* eslint-enable no-alert, no-console */
   });
 
   beforeEach((done) => {
     database.seed.run()
       .then(() => done())
+    /* eslint-disable no-alert, no-console */
       .catch((error) => console.log(error));
+    /* eslint-enable no-alert, no-console */
   });
 
   describe('POST /api/v1/user/authenticate', () => {
