@@ -8,7 +8,7 @@ Update the ship database with current information about a specific vessel
 ***
 
 ## Requires authentication
-This endpoint requires the user to have submitted their email and app name.  In order to post to the database, the user must have an email issued by Turing School of Software and Design ending in `@turing.io`.  This will create a JSON Web Token with administrative access that will be used to authenticate the user.
+This endpoint requires the user to have submitted their email and app name.  In order to patch to the database, the user must have an email issued by Turing School of Software and Design ending in `@turing.io`.  This will create a JSON Web Token with administrative access that will be used to authenticate the user.
 
 ***
 

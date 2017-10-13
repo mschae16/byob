@@ -281,9 +281,7 @@ app.delete('/api/v1/ships/:id', checkAuth, (request, response) => {
       }
       return response.sendStatus(204);
     })
-    .catch(error => response.status(500).json({
-      error
-    }));
+    .catch(error => response.status(500).json({ error }));
 });
 
 app.patch('/api/v1/ships/:id', checkAuth, (request, response) => {
