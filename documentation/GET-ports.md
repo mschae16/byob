@@ -56,7 +56,7 @@ This endpoint will throw a 404 and a 500 error
 
 ``` 
 [
-{
+    {
         "id": "10",
         "port_name": "Vladivostok",
         "port_locode": "RUVVO",
