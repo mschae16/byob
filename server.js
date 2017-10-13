@@ -247,9 +247,7 @@ app.post('/api/v1/ships', checkAuth, (request, response) => {
 
   database('ships').insert(shipObject, '*')
     .then(ship => response.status(201).json(ship))
-    .catch(error => response.status(500).json({
-      error
-    }));
+    .catch(error => response.status(500).json({ error }));
 });
 
 app.delete('/api/v1/ports/:id', checkAuth, (request, response) => {
