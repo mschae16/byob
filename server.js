@@ -259,9 +259,7 @@ app.delete('/api/v1/ports/:id', checkAuth, (request, response) => {
   database('ports').where({ id }).del()
     .then(deleted => {
       if (!deleted) {
-        return response.status(404).json({
-          error: 'A port matching the id submitted could not be found.'
-        });
+        return response.status(404).json({ error: 'A port matching the id submitted could not be found.' });
       } else {
         return response.sendStatus(204);
       }
