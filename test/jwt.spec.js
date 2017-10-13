@@ -9,9 +9,10 @@ const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
 
 const localKey = process.env.SECRET_KEY || require('../key.js');
-
 const adminToken = jwt.sign({ email: 'test@turing.io', appName: 'Jargo', admin: true }, localKey);
 const userToken = jwt.sign({ email: 'test@gmail.com', appName: 'Jargo', admin: false }, localKey);
+
+chai.use(chaiHttp);
 
 describe('JWT middleware', () => {
 

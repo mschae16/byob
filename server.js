@@ -57,7 +57,11 @@ const checkToken = (request, response, next) => {
           error: 'Invalid token.'
         });
       }
-      next();
+      if (decoded.app_name && decoded.email) {
+        next();
+      } else {
+        return response.status(403).json({ error: 'Invalid token.' });
+      }
     });
   }
 };
@@ -261,7 +265,7 @@ app.delete('/api/v1/ports/:id', checkAuth, (request, response) => {
       if (!deleted) {
         return response.status(404).json({ error: 'A port matching the id submitted could not be found.' });
       }
-      return response.sendStatus(204)
+      return response.sendStatus(204);
     })
     .catch(error => response.status(500).json({ error }));
 });
