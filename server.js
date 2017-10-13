@@ -299,8 +299,7 @@ app.patch('/api/v1/ships/:id', checkAuth, (request, response) => {
 
   if (!ship_country && !ship_type && !ship_status && !ship_current_port) {
     return response.status(422).send({
-      error: 'Expected format: { ship_country: <String>, ship_type: <String>, ship_status: <String>, <String>, ship_current_port: <Integer> }. You\'re missing a valid property.'
-    });
+      error: 'Expected format: { ship_country: <String>, ship_type: <String>, ship_status: <String>, <String>, ship_current_port: <Integer> }. You\'re missing a valid property.' });
   }
 
   database('ships').where({ id })
@@ -311,9 +310,7 @@ app.patch('/api/v1/ships/:id', checkAuth, (request, response) => {
       ship_current_port
     }, '*')
     .then(update => response.status(200).json(update))
-    .catch(error => response.status(500).json({
-      error
-    }));
+    .catch(error => response.status(500).json({ error }));
 });
 
 app.patch('/api/v1/ports/:id', checkAuth, (request, response) => {

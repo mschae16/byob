@@ -24,7 +24,7 @@ This endpoint will accept a Jason Web Token query parameter in the url
 ## Required format
 Object
 
-  -- should contain one or both of the following keys of `port_max_vessel_size` with a string value and/or `port_total_ships` with an integer value
+  -- Should contain one or both of the following keys of `port_max_vessel_size` with a string value and/or `port_total_ships` with an integer value
   
   -- example
 
@@ -59,7 +59,7 @@ This endpoint will throw a 422  and 500 error
 
     /api/v1/ports/10
 
-**Return** (This is a shortend example)
+**Return**
 
 ``` 
 [
