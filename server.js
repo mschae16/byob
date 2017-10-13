@@ -256,36 +256,19 @@ app.delete('/api/v1/ports/:id', checkAuth, (request, response) => {
   const { id } = request.params;
   delete request.body.token;
 
-  console.log('id', id);
-  
-
-  database('port_usage').where({ port_id: id }).del()
+  database('ports').where({ id }).del()
     .then(deleted => {
-      console.log('deleted ', deleted);
-      
       if (!deleted) {
         return response.status(404).json({ error: 'A port matching the id submitted could not be found.' });
+      } else {
+        return response.sendStatus(204);
       }
-      return id;
-    })
-    .then(id => {
-      database('ports').where({ id }).del()
-        .then(deleted => {
-          if (!deleted) {
-            return response.status(404).json({ error: 'A port matching the id submitted could not be found.' });
-          } else {
-            return response.sendStatus(204);
-          }
-        })
-        .catch(error => response.status(500).json({ error }));
     })
     .catch(error => response.status(500).json({ error }));
 });
 
 app.delete('/api/v1/ships/:id', checkAuth, (request, response) => {
-  const {
-    id
-  } = request.params;
+  const { id } = request.params;
   delete request.body.token;
 
   database('ships').where({ id }).del()
