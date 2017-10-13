@@ -2,12 +2,14 @@ const chai = require('chai');
 const should = chai.should();
 const chaiHttp = require('chai-http');
 const server = require('../server');
+const jwt = require('jsonwebtoken');
 
 const environment = process.env.NODE_ENV || 'test';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
 
-const token = process.env.TOKEN || require('../token.js');
+const localKey = process.env.SECRET_KEY || require('../key.js');
+const token = jwt.sign({ email: 'test@turing.io', appName: 'Jargo', admin: true }, localKey);
 
 chai.use(chaiHttp);
 
@@ -89,23 +91,25 @@ describe('API Routes', () => {
           response.should.be.json;
           response.body.should.be.a('array');
           response.body.length.should.equal(3);
-          response.body[0].should.have.property('id');
-          response.body[0].should.have.property('port_name');
-          response.body[0].should.have.property('port_locode');
-          response.body[0].should.have.property('port_max_vessel_size');
-          response.body[0].should.have.property('port_total_ships');
-          response.body[0].should.have.property('port_country');
-          response.body[0].should.have.property('port_usage');
-          response.body[0].port_usage.should.have.property('cargo_vessels');
-          response.body[0].port_usage.should.have.property('fishing_vessels');
-          response.body[0].port_usage.should.have.property('various_vessels');
-          response.body[0].port_usage.should.have.property('tanker_vessels');
-          response.body[0].port_usage.should.have.property('tug_offshore_supply_vessels');
-          response.body[0].port_usage.should.have.property('passenger_vessels');
-          response.body[0].port_usage.should.have.property('authority_military_vessels');
-          response.body[0].port_usage.should.have.property('sailing_vessels');
-          response.body[0].port_usage.should.have.property('aid_to_nav_vessels');
-          response.body[0].port_usage.should.have.property('port_id');
+          response.body.forEach( elem => {
+            elem.should.have.property('id');
+            elem.should.have.property('port_name');
+            elem.should.have.property('port_locode');
+            elem.should.have.property('port_max_vessel_size');
+            elem.should.have.property('port_total_ships');
+            elem.should.have.property('port_country');
+            elem.should.have.property('port_usage');
+            elem.port_usage.should.have.property('cargo_vessels');
+            elem.port_usage.should.have.property('fishing_vessels');
+            elem.port_usage.should.have.property('various_vessels');
+            elem.port_usage.should.have.property('tanker_vessels');
+            elem.port_usage.should.have.property('tug_offshore_supply_vessels');
+            elem.port_usage.should.have.property('passenger_vessels');
+            elem.port_usage.should.have.property('authority_military_vessels');
+            elem.port_usage.should.have.property('sailing_vessels');
+            elem.port_usage.should.have.property('aid_to_nav_vessels');
+            elem.port_usage.should.have.property('port_id');
+          });
           done();
         });
     });
