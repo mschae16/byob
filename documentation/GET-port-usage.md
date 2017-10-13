@@ -31,9 +31,9 @@ A JSON array of objects with key-value pairs
 - **port_name** - Name of the port
 - **port_locode** - The United Nations Code for Trade and Transport Locations
 - **port_usage** - An object returned from another database that displays the types of vessels using this port in percentages.  See this [documentation]() for more information.
-- **port_max_vessel_size** - if there is a limit to the vessel size the port can contain, it is found here in meters.
-- **port_total_ships** - The total number of ships currently at the port
-- **port_country** - The country the port is located in
+- **max_vessel_size** - if there is a limit to the vessel size the port can contain, it is found here in meters.
+- **total_ships_at_port** - The total number of ships currently at the port
+- **country** - The country the port is located in
 
 ***
 
