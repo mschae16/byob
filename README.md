@@ -10,7 +10,7 @@ To recieve a token you can visit our page [here](https://byob-jargo.herokuapp.co
 
 ***
 
-##Endpoints
+## Endpoints
 
 - [**GET ports**]()
 - [**GET port usage**]()
