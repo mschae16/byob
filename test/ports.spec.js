@@ -284,7 +284,7 @@ describe('Port Routes', () => {
             .send({ country: 'USA' })
             .end( (error, response) => {
               response.should.have.status(422);
-              response.body.error.should.equal('Expected format: { port_max_vessel_size: <String>, port_total_ships: <Integer>.');
+              response.body.error.should.equal('Expected format: { port_max_vessel_size: <String>, port_total_ships: <Integer>. }');
 
               chai.request(server)
                 .get('/api/v1/ports/10')
