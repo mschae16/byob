@@ -1,5 +1,5 @@
 * {
-  font-family: 'Bungee Inline', cursive;
+  font-family: 'Roboto', sans-serif;
 }
 body {
   display: flex;
@@ -15,12 +15,14 @@ body {
 }
 
 h1 {
+  font-family: 'Bungee Inline', cursive;
   font-size: 7em;
-  
+
 }
 
 .input,
 .submit {
+  font-family: 'Bungee Inline', cursive;
   border: none;
   font-size: 1.3em;
   height: 40px;
@@ -42,4 +44,3 @@ h1 {
   overflow-wrap: break-word;
   padding: 40px
 }
-
