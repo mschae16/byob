@@ -17,8 +17,8 @@ This endpoint will accept a Jason Web Token query parameter in the url
 
     /api/v1/ports?token=(jwt goes here)
     
-- **id** - The id parameter will select the specific port from the database where the port's id matches the given parameter
-
+- **id** The id parameter will select the specific port from the database where the port's id matches the given parameter
+---
     /api/v1/ports/:id
 
 ***
