@@ -554,8 +554,10 @@ describe('JWT middleware', () => {
     it('PATCH port - jwt passed in headers', (done) => {
       chai.request(server)
         .patch('/api/v1/ports/10')
-        .send()
+        .set('Authorization', adminToken)
+        .send(patchData)
         .end( (error, response) => {
+          response.should.have.status(200);
           done();
         });
     });
@@ -563,8 +565,10 @@ describe('JWT middleware', () => {
     it('returns error if missing jwt', (done) => {
       chai.request(server)
         .patch('/api/v1/ports/10')
-        .send()
+        .send(patchData)
         .end( (error, response) => {
+          response.should.have.status(403)
+          response.body.error.should.equal('You must be authorized to hit this endpoint.');
           done();
         });
     });
@@ -572,19 +576,27 @@ describe('JWT middleware', () => {
     it('returns error if missing admin privileges', (done) => {
       chai.request(server)
         .patch('/api/v1/ports/10')
-        .send()
+        .set('Authorization', userToken)
+        .send(patchData)
         .end( (error, response) => {
+          response.should.have.status(403)
+          response.body.error.should.equal('You are not authorized to have write access to this endpoint.')
           done();
         });
     });
   });
 
   describe('Patch single ship with jwt', () => {
+    const patchShip = {
+      ship_status: 'underway using engine'
+    }
+
     it('PATCH ship - jwt passed in query params', (done) => {
       chai.request(server)
         .patch(`/api/v1/ships/4?token=${adminToken}`)
-        .send()
+        .send(patchShip)
         .end( (error, response) => {
+          response.should.have.status(200);
           done();
         });
     });
@@ -592,8 +604,9 @@ describe('JWT middleware', () => {
     it('PATCH ship - jwt passed in request body', (done) => {
       chai.request(server)
         .patch('/api/v1/ships/4')
-        .send()
+        .send(Object.assign({}, patchShip, { token: adminToken }))
         .end( (error, response) => {
+          response.should.have.status(200);
           done();
         });
     });
@@ -601,8 +614,10 @@ describe('JWT middleware', () => {
     it('PATCH ship - jwt passed in headers', (done) => {
       chai.request(server)
         .patch('/api/v1/ships/4')
-        .send()
+        .set('Authorization', adminToken)
+        .send(patchShip)
         .end( (error, response) => {
+          response.should.have.status(200);
           done();
         });
     });
@@ -610,8 +625,10 @@ describe('JWT middleware', () => {
     it('returns error if missing jwt', (done) => {
       chai.request(server)
         .patch('/api/v1/ships/4')
-        .send()
+        .send(patchShip)
         .end( (error, response) => {
+          response.should.have.status(403)
+          response.body.error.should.equal('You must be authorized to hit this endpoint.');
           done();
         });
     });
@@ -619,35 +636,83 @@ describe('JWT middleware', () => {
     it('returns error if missing admin privileges', (done) => {
       chai.request(server)
         .patch('/api/v1/ships/4')
-        .send()
+        .set('Authorization', userToken)
+        .send(patchShip)
         .end( (error, response) => {
+          response.should.have.status(403)
+          response.body.error.should.equal('You are not authorized to have write access to this endpoint.')
           done();
         });
     });
   });
 
   describe('Put-update port-usage with jwt', () => {
-    it('PUT port-usage - jwt passed in query params', (done) => {
+    const putData = {
+      cargo_vessels: '10%',
+      fishing_vessels: '10%',
+      various_vessels: '10%',
+      tanker_vessels: '10%',
+      tug_offshore_supply_vessels: '10%',
+      passenger_vessels: '10%',
+      authority_military_vessels: '10%',
+      sailing_vessels: '10%',
+      aid_to_nav_vessels: '10%'
+    }
 
+    it('PUT port-usage - jwt passed in query params', (done) => {
+      chai.request(server)
+        .put(`/api/v1/port-usage/10?token=${adminToken}`)
+        .send(putData)
+        .end( (error, response) => {
+          response.should.have.status(200);
+          done();
+        });
     });
 
     it('PUT port-usage - jwt passed in request body', (done) => {
-
+      chai.request(server)
+        .put('/api/v1/port-usage/10')
+        .send(Object.assign({}, putData, { token: adminToken }))
+        .end( (error, response) => {
+          response.should.have.status(200);
+          done();
+        });
     });
 
     it('PUT port-usage - jwt passed in headers', (done) => {
-
+      chai.request(server)
+        .put('/api/v1/port-usage/10')
+        .set('Authorization', adminToken)
+        .send(putData)
+        .end( (error, response) => {
+          response.should.have.status(200);
+          done();
+        });
     });
 
     it('returns error if missing jwt', (done) => {
-
+      chai.request(server)
+        .put('/api/v1/port-usage/10')
+        .send(putData)
+        .end( (error, response) => {
+          response.should.have.status(403)
+          response.body.error.should.equal('You must be authorized to hit this endpoint.');
+          done();
+        });
     });
 
     it('returns error if missing admin privileges', (done) => {
-
+      chai.request(server)
+        .put('/api/v1/port-usage/10')
+        .set('Authorization', userToken)
+        .send(putData)
+        .end( (error, response) => {
+          response.should.have.status(403)
+          response.body.error.should.equal('You are not authorized to have write access to this endpoint.')
+          done();
+        });
     });
   });
-
 
 
 });
