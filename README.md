@@ -12,9 +12,9 @@ To recieve a token you can visit our page [here](https://byob-jargo.herokuapp.co
 
 ## Endpoints
 
-- [**GET ports**]()
+- [**GET ports**](https://github.com/mschae16/byob/blob/master/documentation/GET-ports.md)
 - [**GET port usage**]()
-- [**GET ships**]()
+- [**GET ships**](https://github.com/mschae16/byob/blob/master/documentation/GET-ships.md)
 - [**POST authenticate**]()
 - [**POST ports**]()
 - [**POST ships**]()
