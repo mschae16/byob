@@ -56,7 +56,7 @@ This endpoint will throw a 500 error
 
 ``` 
 [
-	{
+    {
         "cargo_vessels": "72.5%",
         "fishing_vessels": "6.14%",
         "various_vessels": "6.61%",
