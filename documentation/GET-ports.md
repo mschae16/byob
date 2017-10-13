@@ -23,6 +23,13 @@ This endpoint will accept a Jason Web Token query parameter in the url
 
 ***
 
+## Nested promise
+This endpoint calls on another database to return an object of the ports' usage in percentages.  
+
+    /api/v1/port-usage
+
+***
+
 ## Return format
 
 A JSON array of objects with key-value pairs
@@ -56,7 +63,7 @@ This endpoint will throw a 404 and a 500 error
 
 ``` 
 [
-{
+    {
         "id": "10",
         "port_name": "Vladivostok",
         "port_locode": "RUVVO",
