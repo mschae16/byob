@@ -1,6 +1,6 @@
 # User Resources
 
-    GET ports usage
+    GET port usage
 
 ## Description
 Returns all percentages of vessels in all ports from the database.

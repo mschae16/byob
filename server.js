@@ -376,9 +376,7 @@ app.put('/api/v1/port-usage/:id', checkAuth, (request, response) => {
   database('port_usage').where({ port_id: id })
     .update(request.body, '*')
     .then(update => response.status(200).json(update))
-    .catch(error => response.status(500).json({
-      error
-    }));
+    .catch(error => response.status(500).json({ error }));
 });
 
 
