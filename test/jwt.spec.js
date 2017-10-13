@@ -186,6 +186,8 @@ describe('JWT middleware', () => {
         .end( (error, response) => {
           response.should.have.status(200);
           response.should.be.json;
+          response.body.should.be.a('array');
+          response.body.length.should.equal(1);
           done();
         });
     });
@@ -197,6 +199,8 @@ describe('JWT middleware', () => {
         .end( (error, response) => {
           response.should.have.status(200);
           response.should.be.json;
+          response.body.should.be.a('array');
+          response.body.length.should.equal(1);
           done();
         });
     });
@@ -208,6 +212,8 @@ describe('JWT middleware', () => {
         .end( (error, response) => {
           response.should.have.status(200);
           response.should.be.json;
+          response.body.should.be.a('array');
+          response.body.length.should.equal(1);
           done();
         });
     });
@@ -230,6 +236,8 @@ describe('JWT middleware', () => {
         .end( (error, response) => {
           response.should.have.status(200);
           response.should.be.json;
+          response.body.should.be.a('array');
+          response.body.length.should.equal(1);
           done();
         });
     });
@@ -241,6 +249,8 @@ describe('JWT middleware', () => {
         .end( (error, response) => {
           response.should.have.status(200);
           response.should.be.json;
+          response.body.should.be.a('array');
+          response.body.length.should.equal(1);
           done();
         });
     });
@@ -252,6 +262,8 @@ describe('JWT middleware', () => {
         .end( (error, response) => {
           response.should.have.status(200);
           response.should.be.json;
+          response.body.should.be.a('array');
+          response.body.length.should.equal(1);
           done();
         });
     });
@@ -267,34 +279,374 @@ describe('JWT middleware', () => {
     });
   });
 
-  // describe('Post new port with jwt', () => {
-  //
-  // });
-  //
-  // describe('Post new ship with jwt', () => {
-  //
-  // });
-  //
-  // // do last
+  describe('Post new port with jwt', () => {
+    const mockData = {
+        port_name: 'Osaka',
+        port_locode: 'JPOSA',
+        port_usage: {
+          cargo_vessels: '63.93%',
+          fishing_vessels: '0.2%',
+          various_vessels: '5.81%',
+          tanker_vessels: '17.64%',
+          tug_offshore_supply_vessels: '9.62%',
+          passenger_vessels: '0.8%',
+          authority_military_vessels: '0.8%',
+          sailing_vessels: '1.2%',
+          aid_to_nav_vessels: '0%'
+        },
+        port_max_vessel_size: 'unavailable',
+        port_total_ships: 745,
+        port_country: 'Japan'
+    };
+
+    it('POST port - jwt passed in query params', (done) => {
+      chai.request(server)
+        .post(`/api/v1/ports?token=${adminToken}`)
+        .send(mockData)
+        .end( (error, response) => {
+          response.should.have.status(201);
+          done();
+        });
+    });
+
+    it('POST port - jwt passed in request body', (done) => {
+      chai.request(server)
+        .post('/api/v1/ports')
+        .send(Object.assign({}, mockData, { token: adminToken }))
+        .end( (error, response) => {
+          response.should.have.status(201);
+          done();
+        });
+    });
+
+    it('POST port - jwt passed in headers', (done) => {
+      chai.request(server)
+        .post('/api/v1/ports')
+        .set('Authorization', adminToken)
+        .send(mockData)
+        .end( (error, response) => {
+          response.should.have.status(201);
+          done();
+        });
+    });
+
+    it('returns error if missing jwt', (done) => {
+      chai.request(server)
+        .post('/api/v1/ports')
+        .send(mockData)
+        .end( (error, response) => {
+          response.should.have.status(403);
+          response.body.error.should.equal('You must be authorized to hit this endpoint.')
+          done();
+        });
+    });
+
+    it('returns error if missing admin privileges', (done) => {
+      chai.request(server)
+        .post('/api/v1/ports')
+        .set('Authorization', userToken)
+        .send(mockData)
+        .end( (error, response) => {
+          response.should.have.status(403);
+          response.body.error.should.equal('You are not authorized to have write access to this endpoint.');
+          done();
+        });
+    });
+  });
+
+  describe('Post new ship with jwt', () => {
+    const mockShip = {
+      ship_status: 'moored',
+      ship_imo: '8978116',
+      ship_length: '105x16m',
+      ship_mmsi_callsign: '273626900\nUDLE',
+      ship_current_port: 10,
+      ship_country: 'Russia',
+      ship_name: 'JARGO',
+      ship_type: 'Trawler'
+    }
+
+    it('POST ship - jwt passed in query params', (done) => {
+      chai.request(server)
+        .post(`/api/v1/ships?token=${adminToken}`)
+        .send(mockShip)
+        .end( (error, response) => {
+          response.should.have.status(201);
+          done();
+        });
+    });
+
+    it('POST ship - jwt passed in request body', (done) => {
+      chai.request(server)
+        .post('/api/v1/ships')
+        .send(Object.assign({}, mockShip, { token: adminToken }))
+        .end( (error, response) => {
+          response.should.have.status(201);
+          done();
+        });
+    });
+
+    it('POST ship - jwt passed in headers', (done) => {
+      chai.request(server)
+        .post('/api/v1/ships')
+        .set('Authorization', adminToken)
+        .send(mockShip)
+        .end( (error, response) => {
+          response.should.have.status(201);
+          done();
+        });
+    });
+
+    it('returns error if missing jwt', (done) => {
+      chai.request(server)
+        .post('/api/v1/ships')
+        .send(mockShip)
+        .end( (error, response) => {
+          response.should.have.status(403);
+          response.body.error.should.equal('You must be authorized to hit this endpoint.')
+          done();
+        });
+    });
+
+    it('returns error if missing admin privileges', (done) => {
+      chai.request(server)
+        .post('/api/v1/ships')
+        .set('Authorization', userToken)
+        .send(mockShip)
+        .end( (error, response) => {
+          response.should.have.status(403);
+          response.body.error.should.equal('You are not authorized to have write access to this endpoint.')
+          done();
+        });
+    });
+  });
+
+  // do last
   // describe('Delete a port with jwt', () => {
+  //   it('DELETE port - jwt passed in query params', (done) => {
+  //     chai.request(server)
+  //       .delete(`/api/v1/ports/10?token=${adminToken}`)
+  //       .end( (error, response) => {
+  //         response.should.have.status(204);
+  //         done();
+  //       });
+  //   });
   //
+  //   it('DELETE port - jwt passed in request body', (done) => {
+  //     chai.request(server)
+  //       .delete('/api/v1/ports/10')
+  //       .send({ token: adminToken })
+  //       .end( (error, response) => {
+  //         response.should.have.status(204);
+  //         done();
+  //       });
+  //   });
+  //
+  //   it('DELETE port - jwt passed in headers', (done) => {
+  //     chai.request(server)
+  //       .delete('/api/v1/ports/10')
+  //       .set('Authorization', adminToken)
+  //       .end( (error, response) => {
+  //         response.should.have.status(204);
+  //         done();
+  //       });
+  //   });
+  //
+  //   it('returns error if missing jwt', (done) => {
+  //     chai.request(server)
+  //       .delete('/api/v1/ports/10')
+  //       .end( (error, response) => {
+  //         response.should.have.status(403);
+  //         response.body.error.should.equal('You must be authorized to hit this endpoint.');
+  //         done();
+  //       });
+  //   });
+  //
+  //   it('returns error if missing admin privileges', (done) => {
+  //     chai.request(server)
+  //       .delete('/api/v1/ports/10')
+  //       .set('Authorization', userToken)
+  //       .end( (error, response) => {
+  //         response.should.have.status(403);
+  //         response.body.error.should.equal('You are not authorized to have write access to this endpoint.');
+  //         done();
+  //       });
+  //   });
   // });
-  //
-  // describe('Delete a ship with jwt', () => {
-  //
-  // });
-  //
-  // describe('Patch single port with jwt', () => {
-  //
-  // });
-  //
-  // describe('Patch single ship with jwt', () => {
-  //
-  // });
-  //
-  // describe('Put-update port-usage with jwt', () => {
-  //
-  // });
+
+  describe('Delete single ship with jwt', () => {
+    it('DELETE ship - jwt passed in query params', (done) => {
+      chai.request(server)
+        .delete(`/api/v1/ships/3?token=${adminToken}`)
+        .end( (error, response) => {
+          response.should.have.status(204);
+          done();
+        });
+    });
+
+    it('DELETE ship - jwt passed in request body', (done) => {
+      chai.request(server)
+        .delete('/api/v1/ships/3')
+        .send({ token: adminToken })
+        .end( (error, response) => {
+          response.should.have.status(204);
+          done();
+        });
+    });
+
+    it('DELETE ship - jwt passed in headers', (done) => {
+      chai.request(server)
+        .delete('/api/v1/ships/3')
+        .set('Authorization', adminToken)
+        .end( (error, response) => {
+          response.should.have.status(204);
+          done();
+        });
+    });
+
+    it('returns error if jwt is missing', (done) => {
+      chai.request(server)
+        .delete('/api/v1/ships/3')
+        .end( (error, response) => {
+          response.should.have.status(403);
+          response.body.error.should.equal('You must be authorized to hit this endpoint.');
+          done();
+        });
+    });
+
+    it('returns error if missing admin privileges', (done) => {
+      chai.request(server)
+        .delete('/api/v1/ships/3')
+        .set('Authorization', userToken)
+        .end( (error, response) => {
+          response.should.have.status(403);
+          response.body.error.should.equal('You are not authorized to have write access to this endpoint.');
+          done();
+        });
+    });
+  });
+
+  describe('Patch single port with jwt', () => {
+    const patchData = {
+        port_total_ships: 232
+    }
+
+    it('PATCH port - jwt passed in query params', (done) => {
+      chai.request(server)
+        .patch(`/api/v1/ports/10?token=${adminToken}`)
+        .send(patchData)
+        .end( (error, response) => {
+          response.should.have.status(200);
+          done();
+        });
+    });
+
+    it('PATCH port - jwt passed in request body', (done) => {
+      chai.request(server)
+        .patch('/api/v1/ports/10')
+        .send(Object.assign({}, patchData, { token: adminToken }))
+        .end( (error, response) => {
+          response.should.have.status(200);
+          done();
+        });
+    });
+
+    it('PATCH port - jwt passed in headers', (done) => {
+      chai.request(server)
+        .patch('/api/v1/ports/10')
+        .send()
+        .end( (error, response) => {
+          done();
+        });
+    });
+
+    it('returns error if missing jwt', (done) => {
+      chai.request(server)
+        .patch('/api/v1/ports/10')
+        .send()
+        .end( (error, response) => {
+          done();
+        });
+    });
+
+    it('returns error if missing admin privileges', (done) => {
+      chai.request(server)
+        .patch('/api/v1/ports/10')
+        .send()
+        .end( (error, response) => {
+          done();
+        });
+    });
+  });
+
+  describe('Patch single ship with jwt', () => {
+    it('PATCH ship - jwt passed in query params', (done) => {
+      chai.request(server)
+        .patch(`/api/v1/ships/4?token=${adminToken}`)
+        .send()
+        .end( (error, response) => {
+          done();
+        });
+    });
+
+    it('PATCH ship - jwt passed in request body', (done) => {
+      chai.request(server)
+        .patch('/api/v1/ships/4')
+        .send()
+        .end( (error, response) => {
+          done();
+        });
+    });
+
+    it('PATCH ship - jwt passed in headers', (done) => {
+      chai.request(server)
+        .patch('/api/v1/ships/4')
+        .send()
+        .end( (error, response) => {
+          done();
+        });
+    });
+
+    it('returns error if missing jwt', (done) => {
+      chai.request(server)
+        .patch('/api/v1/ships/4')
+        .send()
+        .end( (error, response) => {
+          done();
+        });
+    });
+
+    it('returns error if missing admin privileges', (done) => {
+      chai.request(server)
+        .patch('/api/v1/ships/4')
+        .send()
+        .end( (error, response) => {
+          done();
+        });
+    });
+  });
+
+  describe('Put-update port-usage with jwt', () => {
+    it('PUT port-usage - jwt passed in query params', (done) => {
+
+    });
+
+    it('PUT port-usage - jwt passed in request body', (done) => {
+
+    });
+
+    it('PUT port-usage - jwt passed in headers', (done) => {
+
+    });
+
+    it('returns error if missing jwt', (done) => {
+
+    });
+
+    it('returns error if missing admin privileges', (done) => {
+
+    });
+  });
 
 
 
