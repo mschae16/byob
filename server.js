@@ -73,10 +73,12 @@ app.post('/api/v1/user/authenticate', (request, response) => {
     });
   }
   const emailSuffix = email.split('@')[1];
-  emailSuffix === 'turing.io' ?
-    user = Object.assign({}, request.body, { admin: true })
-    :
+  
+  if (emailSuffix === 'turing.io') {
+    user = Object.assign({}, request.body, { admin: true });
+  } else {
     user = Object.assign({}, request.body, { admin: false });
+  }
 
   const token = jwt.sign(user, app.get('secretKey'), { expiresIn: '48h' });
   response.status(201).json({ token });
