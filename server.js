@@ -3,11 +3,11 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const app = express();
 const jwt = require('jsonwebtoken');
-const localKey = require('./key.js') || undefined;
 
 const environment = process.env.NODE_ENV || "development";
 const configuration = require("./knexfile")[environment];
 const database = require("knex")(configuration);
+const localKey = process.env.SECRET_KEY || require('./key.js');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
