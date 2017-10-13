@@ -7,7 +7,7 @@ const environment = process.env.NODE_ENV || 'test';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
 
-const token = require('../token.js');
+const token = process.env.TOKEN || require('../token.js');
 
 chai.use(chaiHttp);
 
