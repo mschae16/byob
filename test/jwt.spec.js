@@ -179,14 +179,94 @@ describe('JWT middleware', () => {
 
   });
 
-  // describe('Retrieve single port with jwt', () => {
-  //
-  // })
-  //
-  // describe('Retrieve single ship with jwt', () => {
-  //
-  // });
-  //
+  describe('Retrieve a single port with jwt', () => {
+    it('GET port - jwt passed in query params', (done) => {
+      chai.request(server)
+        .get(`/api/v1/ports/20?token=${userToken}`)
+        .end( (error, response) => {
+          response.should.have.status(200);
+          response.should.be.json;
+          done();
+        });
+    });
+
+    it('GET port - jwt passed in request body', (done) => {
+      chai.request(server)
+        .get('/api/v1/ports/20')
+        .send({ token: userToken })
+        .end( (error, response) => {
+          response.should.have.status(200);
+          response.should.be.json;
+          done();
+        });
+    });
+
+    it('GET port - jwt passed in headers', (done) => {
+      chai.request(server)
+        .get('/api/v1/ports/20')
+        .set('Authorization', userToken)
+        .end( (error, response) => {
+          response.should.have.status(200);
+          response.should.be.json;
+          done();
+        });
+    });
+
+    it('returns an error if no jwt', (done) => {
+      chai.request(server)
+        .get('/api/v1/ports/20')
+        .end( (error, response) => {
+          response.should.have.status(403);
+          response.body.error.should.equal('You must be authorized to hit this endpoint.')
+          done();
+        });
+    });
+  });
+
+  describe('Retrieve single ship with jwt', () => {
+    it('GET ship - jwt passed in query params', (done) => {
+      chai.request(server)
+        .get(`/api/v1/ships/7?token=${userToken}`)
+        .end( (error, response) => {
+          response.should.have.status(200);
+          response.should.be.json;
+          done();
+        });
+    });
+
+    it('GET ship - jwt passed in request body', (done) => {
+      chai.request(server)
+        .get('/api/v1/ships/7')
+        .send({ token: userToken })
+        .end( (error, response) => {
+          response.should.have.status(200);
+          response.should.be.json;
+          done();
+        });
+    });
+
+    it('GET ship - jwt passed in headers', (done) => {
+      chai.request(server)
+        .get('/api/v1/ships/7')
+        .set('Authorization', userToken)
+        .end( (error, response) => {
+          response.should.have.status(200);
+          response.should.be.json;
+          done();
+        });
+    });
+
+    it('returns an error if no jwt', (done) => {
+      chai.request(server)
+        .get('/api/v1/ships/7')
+        .end( (error, response) => {
+          response.should.have.status(403);
+          response.body.error.should.equal('You must be authorized to hit this endpoint.')
+          done();
+        });
+    });
+  });
+
   // describe('Post new port with jwt', () => {
   //
   // });
