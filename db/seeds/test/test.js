@@ -40,36 +40,36 @@ const createPort = (knex, port) => {
     port_country: port.country,
     id: port.id
   }, '*')
-  .then( portObject => {
-    const foundPort = ports.find(port => port.port_name === portObject[0].port_name);
-    const portPromise = createPortUsage(knex, foundPort.port_usage, portObject[0].id);
+    .then( portObject => {
+      const foundPort = ports.find(port => port.port_name === portObject[0].port_name);
+      const portPromise = createPortUsage(knex, foundPort.port_usage, portObject[0].id);
 
-    const shipPromises = [];
-    const filteredShips = ships.filter( ship => ship.port === portObject[0].port_name);
+      const shipPromises = [];
+      const filteredShips = ships.filter( ship => ship.port === portObject[0].port_name);
 
-    filteredShips.forEach( ship => {
+      filteredShips.forEach( ship => {
 
-      shipPromises.push(
-        createShip(knex, ship, portObject[0].id)
-      )
-    });
+        shipPromises.push(
+          createShip(knex, ship, portObject[0].id)
+        );
+      });
 
-    return Promise.all([portPromise, ...shipPromises]);
-  })
-  .catch(error => console.error('Error seeding data', error))
+      return Promise.all([portPromise, ...shipPromises]);
+    })
+    .catch(error => console.error('Error seeding data', error))
 };
 
 exports.seed = (knex, Promise) => {
   return knex('ships').del()
-  .then(() => knex('port_usage').del())
-  .then(() => knex('ports').del())
-  .then(() => {
-    let portPromises = [];
+    .then( () => knex('port_usage').del() )
+    .then( () => knex('ports').del() )
+    .then( () => {
+      let portPromises = [];
 
       ports.forEach( port => {
-      portPromises.push(createPort(knex, port));
+        portPromises.push(createPort(knex, port));
+      });
+      return Promise.all(portPromises);
     })
-    return Promise.all(portPromises)
-  })
-  .catch(error => console.error('Error seeding data', error))
+    .catch(error => console.error('Error seeding data', error))
 };
