@@ -373,7 +373,7 @@ describe('JWT middleware', () => {
       ship_type: 'Trawler'
     };
 
-    it('POST ship - jwt passed in query params', (done) => {
+    it.skip('POST ship - jwt passed in query params', (done) => {
       chai.request(server)
         .post(`/api/v1/ships?token=${adminToken}`)
         .send(mockShip)
@@ -383,7 +383,7 @@ describe('JWT middleware', () => {
         });
     });
 
-    it('POST ship - jwt passed in request body', (done) => {
+    it.skip('POST ship - jwt passed in request body', (done) => {
       chai.request(server)
         .post('/api/v1/ships')
         .send(Object.assign({}, mockShip, { token: adminToken }))
@@ -393,7 +393,7 @@ describe('JWT middleware', () => {
         });
     });
 
-    it('POST ship - jwt passed in headers', (done) => {
+    it.skip('POST ship - jwt passed in headers', (done) => {
       chai.request(server)
         .post('/api/v1/ships')
         .set('Authorization', adminToken)
