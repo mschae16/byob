@@ -15,7 +15,9 @@ const getToken = (e) => {
   })
     .then( data => data.json())
     .then( response => showToken(response))
-    .catch( error => console.log(error))
+  /* eslint-disable no-alert, no-console */
+    .catch( error => console.log(error));
+  /* eslint-enable no-alert, no-console */
 
   $('.email').val('');
   $('.name').val('');
