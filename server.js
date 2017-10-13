@@ -254,13 +254,12 @@ app.delete('/api/v1/ports/:id', checkAuth, (request, response) => {
   const { id } = request.params;
   delete request.body.token;
 
-  database('ports').where({ id }).del()
+  database('ports').where('id', id).del()
     .then(deleted => {
       if (!deleted) {
         return response.status(404).json({ error: 'A port matching the id submitted could not be found.' });
-      } else {
-        return response.sendStatus(204);
       }
+      return response.sendStatus(204)
     })
     .catch(error => response.status(500).json({ error }));
 });
