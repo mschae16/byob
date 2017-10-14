@@ -26,7 +26,7 @@ Object
 
   -- should contain one or any combination of the following keys:
 
-- **ship_country** - The country this vessel belongs to
+- **ship_country** - The country of the vessel's home port
 - **ship_type** - The type of vessel
 - **ship_status** - The current status of the vessel
 - **ship_current_port** - The current port where the vessel is located, if any
