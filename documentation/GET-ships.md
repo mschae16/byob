@@ -54,7 +54,7 @@ This endpoint will throw a 404 and a 500 error
 
     /api/v1/ships
 
-**Return** (This is a short-end example)
+**Return** (This is a shortened example)
 
 ```
 [
