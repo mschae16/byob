@@ -3,20 +3,20 @@
     GET ports
 
 ## Description
-Returns all the ports and each ports usage percentages from their appropriate databases.
+Returns all the ports and each ports usage percentages from their appropriate tables in the database.
 
 ***
 
 ## Requires authentication
-This endpoint requires the user to submit their email and app name in order to retrieve from the database.  This will create a JSON Web Token that will be used to authenticate the user.
+This endpoint requires the user to submit their email and application name in order to retrieve from the database.  This will create a JSON Web Token that will be used to authenticate the user.
 
 ***
 
 ## Parameters
-This endpoint will accept a Jason Web Token query parameter in the url
+This endpoint will accept a JSON Web Token query parameter in the url
 
     /api/v1/ports?token=(jwt goes here)
-    
+
 **id** - The id parameter will select the specific port from the database where the port's id matches the given parameter
 
     /api/v1/ports/:id
@@ -24,7 +24,7 @@ This endpoint will accept a Jason Web Token query parameter in the url
 ***
 
 ## Nested promise
-This endpoint calls on another database to return an object of the ports' usage in percentages.  
+This endpoint calls on another table in the database to return an object of the ports' usage in percentages.  
 
     /api/v1/port-usage
 
@@ -37,10 +37,10 @@ A JSON array of objects with key-value pairs
 - **id**  - Unique id
 - **port_name** - Name of the port
 - **port_locode** - The United Nations Code for Trade and Transport Locations
-- **port_usage** - An object returned from another database that displays the types of vessels using this port in percentages.  See this [documentation]() for more information.
+- **port_usage** - An object returned from another table that displays the types of vessels using this port in percentages.  See this [documentation](https://github.com/mschae16/byob/blob/master/documentation/GET-port-usage.md) for more information.
 - **port_max_vessel_size** - If there is a limit to the vessel size the port can contain, it is found here in meters.
-- **port_total_ships** - The total number of ships currently at the port
-- **port_country** - The country the port is located in
+- **port_total_ships** - The total number of ships currently in port
+- **port_country** - The country in which the port is located
 
 ***
 
@@ -48,7 +48,7 @@ A JSON array of objects with key-value pairs
 This endpoint will throw a 404 and a 500 error
 
 ```
-{ 
+{
     error: 'Error message will be here.'
 }
 ```
@@ -59,9 +59,9 @@ This endpoint will throw a 404 and a 500 error
 
     /api/v1/ports
 
-**Return** (This is a shortend example)
+**Return** (This is a shortened example)
 
-``` 
+```
 [
     {
         "id": "10",
