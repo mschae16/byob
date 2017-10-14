@@ -74,7 +74,7 @@ This endpoint will throw a 422  and 500 error
 
     /api/v1/port-usage/10
 
-**Return** (This is a short-end example)
+**Return** (This is a shortened example)
 
 ```
 [
