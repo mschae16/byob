@@ -29,7 +29,7 @@ A JSON array of objects with key-value pairs
 
 - **id**  - Unique id
 - **ship_name** - Name of the vessel
-- **ship_country** - The country this vessel belongs to
+- **ship_country** - The country of this vessel's home port
 - **ship_type** - The type of vessel
 - **ship_length** - The vessel's length in meters
 - **ship_imo** - International Maritime Organization Number
