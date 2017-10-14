@@ -8,12 +8,12 @@ Returns all percentages of vessels in all ports from the database.
 ***
 
 ## Requires authentication
-This endpoint requires the user to submit their email and app name in order to retrieve from the database.  This will create a JSON Web Token that will be used to authenticate the user.
+This endpoint requires the user to submit their email and application name in order to retrieve from the database.  This will create a JSON Web Token that will be used to authenticate the user.
 
 ***
 
 ## Parameters
-This endpoint will accept a Jason Web Token query parameter in the url
+This endpoint will accept a JSON Web Token query parameter in the url
 
     /api/v1/port-usage?token=(jwt goes here)
 
@@ -26,7 +26,7 @@ A JSON array of objects with key-value pairs
 - **id**  - Unique id
 - **cargo_vessels** - Cargo Vessels
 - **fishing_vessels** - Fishing Vessels
-- **various_vessels** - An unlisted type of vessel.
+- **various_vessels** - An unlisted type of vessel
 - **tanker_vessels** - Tanker Vessels
 - **tug_offshore_supply_vessels** - Tug, Offshore, Supply or Dredge Vessel
 - **passenger_vessels** - Passenger Vessel
@@ -41,7 +41,7 @@ A JSON array of objects with key-value pairs
 This endpoint will throw a 500 error
 
 ```
-{ 
+{
 	error
 }
 ```
@@ -52,9 +52,9 @@ This endpoint will throw a 500 error
 
     /api/v1/port-usage
 
-**Return** (This is a shortend example)
+**Return** (This is a short-end example)
 
-``` 
+```
 [
     {
         "cargo_vessels": "72.5%",

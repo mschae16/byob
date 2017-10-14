@@ -8,15 +8,15 @@ Returns all the vessels in the database.
 ***
 
 ## Requires authentication
-This endpoint requires the user to submit their email and app name in order to retrieve from the database.  This will create a JSON Web Token that will be used to authenticate the user.
+This endpoint requires the user to submit their email and application name in order to retrieve from the database.  This will create a JSON Web Token that will be used to authenticate the user.
 
 ***
 
 ## Parameters
-This endpoint will accept a Jason Web Token query parameter in the url
+This endpoint will accept a JSON Web Token query parameter in the url
 
     /api/v1/ships?token=(jwt goes here)
-    
+
 **id** - The id parameter will select the specific vessel from the database where the ship's id matches the given parameter
 
     /api/v1/ships/:id
@@ -29,13 +29,13 @@ A JSON array of objects with key-value pairs
 
 - **id**  - Unique id
 - **ship_name** - Name of the vessel
-- **ship_country** - The country this vessel's home port is in
-- **ship_type** - The type of vessel.
-- **ship_length** - The vessel's length in meters.
+- **ship_country** - The country this vessel belongs to
+- **ship_type** - The type of vessel
+- **ship_length** - The vessel's length in meters
 - **ship_imo** - International Maritime Organization Number
-- **ship_status** - The current status of the vessel.
+- **ship_status** - The current status of the vessel
 - **ship_mmsi_callsign** - Maritime Mobile Service Identity and call sign
-- **ship_current_port** - The current port where the vessel is located if any
+- **ship_current_port** - The current port where the vessel is located, if any
 
 ***
 
@@ -43,7 +43,7 @@ A JSON array of objects with key-value pairs
 This endpoint will throw a 404 and a 500 error
 
 ```
-{ 
+{
     error: 'Error message will be here.'
 }
 ```
@@ -54,9 +54,9 @@ This endpoint will throw a 404 and a 500 error
 
     /api/v1/ships
 
-**Return** (This is a shortend example)
+**Return** (This is a short-end example)
 
-``` 
+```
 [
     {
         "id": "3",

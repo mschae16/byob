@@ -8,16 +8,16 @@ Delete a port from the database
 ***
 
 ## Requires authentication
-This endpoint requires the user to have submitted their email and app name.  In order to Delete to the database, the user must have an email issued by Turing School of Software and Design ending in `@turing.io`.  This will create a JSON Web Token with administrative access that will be used to authenticate the user.
+This endpoint requires the user to have submitted their email and application name.  In order to delete from the database, the user must have an email issued by Turing School of Software and Design, ending in `@turing.io`.  This will create a JSON Web Token with administrative access that can then be used to authenticate the user.
 
 ***
 
 ## Parameters
-This endpoint will accept a Jason Web Token query parameter in the url
+This endpoint will accept a JSON Web Token query parameter in the url
 
     /api/v1/ports/:id?token=(jwt goes here)
-    
-**id** - This endpoint must contain an id that associates it with a specific port
+
+**id** - This endpoint must contain an id that associates it with a specific port to delete
 
 ***
 
@@ -30,7 +30,7 @@ Will return a status code of 204
 This endpoint will throw a 404  and 500 error
 
 ```
-{ 
+{
 	error: 'Error message will be here'
 }
 ```
