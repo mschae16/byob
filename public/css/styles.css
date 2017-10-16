@@ -1,6 +1,7 @@
 * {
   font-family: 'Roboto', sans-serif;
 }
+
 body {
   display: flex;
   flex-direction: column;
@@ -15,14 +16,12 @@ body {
 }
 
 h1 {
-  font-family: 'Bungee Inline', cursive;
+  font-family: 'Bungee Shade', cursive;
   font-size: 7em;
-
 }
 
 .input,
 .submit {
-  font-family: 'Bungee Inline', cursive;
   border: none;
   font-size: 1.3em;
   height: 40px;
